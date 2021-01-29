@@ -52,3 +52,51 @@ body {
   justify-content: center;
   width: 50vw;
 }
+
+.loginContainer,
+.loginContainer label {
+  display: flex;
+  flex-direction: column;
+}
+
+.loginContainer h1 {
+  margin: 0 auto 0 auto;
+}
+
+.loginContainer form {
+  margin-top: 1rem;
+}
+
+.loginContainer label {
+  font-size: 1.8em;
+  margin: 1rem;
+}
+
+.loginContainer input {
+  background: black;
+  font-size: 1em;
+  padding: 0.6rem;
+  border: none;
+  color: white;
+  border-radius: 1rem;
+}
+
+.loginContainer [type="submit"] {
+  background: black;
+  border: none;
+  padding: 0.7rem;
+  font-size: 1.2em;
+  color: white;
+  transition: 0.2s;
+}
+
+.loginContainer [type="submit"]:hover {
+  background: white;
+  color: black;
+}
+
+.flexCenter {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem;
+}

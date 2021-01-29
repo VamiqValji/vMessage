@@ -1,49 +1,58 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 // import logo from './logo.svg';
-import './App.css';
+import "./App.css";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 
 export default function App() {
   return (
     <div className="appContainer">
-    <Router>
-      <div>
-        <div className="nav">
-        <nav>
-          <ul>
-            <li>
-              <Link to="/" style={{ textDecoration: 'none', color: "white" }}>Home</Link>
-            </li>
-            <li>
-              <Link to="/Login" style={{ textDecoration: 'none', color: "white" }}>Login</Link>
-            </li>
-            {/* <li>
+      <Router>
+        <div>
+          <div className="nav">
+            <nav>
+              <ul>
+                <li>
+                  <Link
+                    to="/"
+                    style={{ textDecoration: "none", color: "white" }}
+                  >
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/login"
+                    style={{ textDecoration: "none", color: "white" }}
+                  >
+                    Login
+                  </Link>
+                </li>
+                {/* <li>
               <Link to="/users" style={{ textDecoration: 'none', color: "white" }}>Users</Link>
             </li> */}
-          </ul>
-        </nav>
-        </div>
-        <Switch>
-          <Route path="/login">
-            <Login />
-          </Route>
-          {/* <Route path="/users">
+              </ul>
+            </nav>
+          </div>
+          <Switch>
+            <Route path="/login">
+              <Login />
+            </Route>
+            {/* <Route path="/users">
             <Users />
           </Route> */}
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
+            <Route path="/signup">
+              <SignUp />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </div>
+      </Router>
     </div>
   );
 }
