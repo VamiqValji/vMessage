@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const app = express();
 const cors = require("cors");
 const signUpRoute = require("./routes/signUpRoute");
+const loginRoute = require("./routes/loginRoute");
 const dotenv = require("dotenv");
 
 dotenv.config();
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(cors({}));
 
 app.use("/signup", signUpRoute);
+app.use("/login", loginRoute);
 
 // connect to database
 let port = process.env.PORT;

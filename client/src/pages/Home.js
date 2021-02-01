@@ -24,7 +24,8 @@ export default function Home() {
         <div className="contentContainer">
         <div className="loginContainer">
         <h1>Home</h1>
-        <div>Welcome {isLogged}</div>
+        <div>Welcome</div>
+        <div>{isLogged ? "hi user" : "go login!"}</div>
         <button onClick={clicked}>hello</button>
         </div>
         </div>

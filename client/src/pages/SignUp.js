@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import "../App.css";
-import { Route, Redirect } from 'react-router'
+import { Redirect } from 'react-router'
 import { logIn } from "../actions/index";
 
 export default function SignUp() {
@@ -29,11 +29,11 @@ export default function SignUp() {
         if (res.data.message.includes("Created")) {
           setSuccess("Sign Up Successful!");
           dispatch(logIn());
+          <Redirect to="/home" />
         }
         // <Route exact path="/">
         //   <Redirect to="/home" />
         // </Route>
-        <Redirect to="/home" />
       })
       .catch((err) => {
         console.log(err.response.data.message);
@@ -73,7 +73,7 @@ export default function SignUp() {
           </form>
           <div className="flexCenter">
             <div>
-              Have an account?{" "}
+            <span class="dontHaveAccount">Don't have an account?{" "}</span>
               <Link
                 to="/login"
                 style={{
