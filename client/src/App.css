@@ -6,6 +6,8 @@
 
 :root {
   --grey: #282c34;
+  --success: rgba(46, 204, 113, 0.1);
+  --fail: rgba(231, 76, 60, 0.1);
 }
 
 body {
@@ -99,4 +101,19 @@ body {
   display: flex;
   justify-content: center;
   margin: 0.5rem;
+}
+
+.success,
+.fail {
+  font-size: 1.5em;
+  border: 0.1rem black solid;
+  border-radius: 1rem;
+  margin-top: 2rem;
+  padding: 0.8rem;
+}
+.success {
+  background: var(--success);
+}
+.fail {
+  background: var(--fail);
 }

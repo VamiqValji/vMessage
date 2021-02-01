@@ -1,7 +1,7 @@
 import React from "react";
 import '../App.css';
 import { useSelector, useDispatch } from "react-redux";
-import {logIn, logOut} from "../actions/index"
+import {logIn, logOut} from "../actions/index";
 
 
 export default function Home() {
