@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import "../App.css";
+import { Route, Redirect } from 'react-router'
 import { logIn } from "../actions/index";
 
 export default function SignUp() {
@@ -29,6 +30,10 @@ export default function SignUp() {
           setSuccess("Sign Up Successful!");
           dispatch(logIn());
         }
+        // <Route exact path="/">
+        //   <Redirect to="/home" />
+        // </Route>
+        <Redirect to="/home" />
       })
       .catch((err) => {
         console.log(err.response.data.message);

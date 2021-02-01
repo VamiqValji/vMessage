@@ -6,6 +6,7 @@
 
 :root {
   --grey: #282c34;
+  --lightGrey: rgba(40, 44, 52, 0.4);
   --success: rgba(46, 204, 113, 0.1);
   --fail: rgba(231, 76, 60, 0.1);
 }
@@ -41,6 +42,16 @@ body {
   text-align: center;
   padding: 1rem;
   font-size: 1.5em;
+}
+
+.rightNav {
+  position: absolute;
+  right: 1rem;
+}
+
+.logOut {
+  background: var(--lightGrey);
+  border-radius: 1rem;
 }
 
 .App {

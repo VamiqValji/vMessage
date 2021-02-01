@@ -2,12 +2,33 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 // import logo from './logo.svg';
 import "./App.css";
+import { useSelector, useDispatch } from "react-redux";
+import { logOut } from "./actions/index";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+// import { render } from "react-dom";
 
 export default function App() {
+  const dispatch = useDispatch();
+  const isLogged = useSelector((state) => state.isLogged);
+
+  let renderLogOut;
+  const logOutHandler = () => {
+    dispatch(logOut());
+  };
+
+  if (isLogged) {
+    renderLogOut = (
+      <li className="logOut" onClick={logOutHandler}>
+        Log Out
+      </li>
+    );
+  } else {
+    renderLogOut = "";
+  }
+
   return (
     <div className="appContainer">
       <Router>
@@ -15,6 +36,7 @@ export default function App() {
           <div className="nav">
             <nav>
               <ul>
+                <span className="leftNav">
                 <li>
                   <Link
                     to="/"
@@ -31,6 +53,10 @@ export default function App() {
                     Login
                   </Link>
                 </li>
+                </span>
+                <span className="rightNav">
+                  {renderLogOut}
+                </span>
                 {/* <li>
               <Link to="/users" style={{ textDecoration: 'none', color: "white" }}>Users</Link>
             </li> */}

@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
 
 router.post("/", async (req, res) => {
   console.log(req.body);
-  // let hashedPass = await bcrypt.hash(req.body.password, 10); //lvl of encryption
+  let hashedPass = await bcrypt.hash(req.body.password, 10); //lvl of encryption
 
   let isDuplicate = await signUp.findOne({
     email: req.body.email,
@@ -27,11 +27,11 @@ router.post("/", async (req, res) => {
   // else, create new item in database
   item = new signUp({
     email: req.body.email,
-    // password: hashedPass,
-    password: req.body.password,
+    password: hashedPass,
+    // password: req.body.password,
   });
   console.log(item);
-  item.save();
+  // item.save();
   return res.status(201).json({ message: "Created." });
 });
 
