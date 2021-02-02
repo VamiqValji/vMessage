@@ -26,7 +26,16 @@ export default function App() {
       </li>
     );
   } else {
-    renderLogOut = "";
+    renderLogOut = (
+      <li className="logOut">
+      <Link
+        to="/login"
+        style={{ textDecoration: "none", color: "white" }}
+      >
+        Login
+      </Link>
+    </li>
+    );
   }
 
   return (
@@ -45,14 +54,14 @@ export default function App() {
                     Home
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link
                     to="/login"
                     style={{ textDecoration: "none", color: "white" }}
                   >
                     Login
                   </Link>
-                </li>
+                </li> */}
                 </span>
                 <span className="rightNav">
                   {renderLogOut}

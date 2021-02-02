@@ -65,7 +65,7 @@ export default function Login() {
               <input id="PASSWORD" type="text" name="name" required />
             </label>
             <div className="flexCenter">
-              <input type="submit" value="Submit" />
+              <input type="submit" value="Login" />
             </div>
           </form>
           <div className="flexCenter">

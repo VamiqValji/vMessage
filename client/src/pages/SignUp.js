@@ -68,7 +68,7 @@ export default function SignUp() {
               <input id="PASSWORD" type="text" name="password" required />
             </label>
             <div className="flexCenter">
-              <input type="submit" value="Submit" />
+              <input type="submit" value="Sign Up" />
             </div>
           </form>
           <div className="flexCenter">
