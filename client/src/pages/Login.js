@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { Redirect } from 'react-router'
 import { logIn } from "../actions/index";
+import SuccessPopUp from "../components/SuccessPopUp";
 
 export default function Login() {
   const [success, setSuccess] = useState("");
@@ -88,6 +89,7 @@ export default function Login() {
               {renderSignUpMsg}
           </div>
           </div>
+          { isLogged ? <SuccessPopUp /> : ""}
         </div>
       </div>
     </div>

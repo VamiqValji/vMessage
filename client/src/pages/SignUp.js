@@ -5,6 +5,8 @@ import axios from "axios";
 import "../App.css";
 import { Redirect } from 'react-router'
 import { logIn } from "../actions/index";
+import SuccessPopUp from "../components/SuccessPopUp";
+// import FailPopUp from "../components/FailPopUp";
 
 export default function SignUp() {
   const [success, setSuccess] = useState("");
@@ -91,6 +93,7 @@ export default function SignUp() {
               {renderSignUpMsg}
             </div>
           </div>
+          { isLogged ? <SuccessPopUp /> : ""}
         </div>
       </div>
     </div>
