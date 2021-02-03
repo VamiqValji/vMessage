@@ -13,7 +13,7 @@ export default function SignUp() {
 
   const dispatch = useDispatch();
   const isLogged = useSelector((state) => state.isLogged);
-  console.log(isLogged);
+  // console.log(isLogged);
 
   const submit = (e) => {
     e.preventDefault();
@@ -33,6 +33,7 @@ export default function SignUp() {
           dispatch(logIn());
           <Redirect to="/home" />
         }
+        localStorage.setItem("token", res.data.token);
         // <Route exact path="/">
         //   <Redirect to="/home" />
         // </Route>

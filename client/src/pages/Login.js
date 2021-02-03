@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "../App.css";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import { Redirect } from 'react-router'
+import { Redirect } from "react-router";
 import { logIn } from "../actions/index";
 import SuccessPopUp from "../components/SuccessPopUp";
 
@@ -12,7 +12,7 @@ export default function Login() {
 
   const dispatch = useDispatch();
   const isLogged = useSelector((state) => state.isLogged);
-  console.log(isLogged);
+  // console.log(isLogged);
 
   const submit = (e) => {
     e.preventDefault();
@@ -30,12 +30,15 @@ export default function Login() {
         if (res.data.message.includes("Logged in")) {
           setSuccess("Login Successful!");
           dispatch(logIn());
-          <Redirect to="/home" />
+          <Redirect to="/home" />;
         }
       })
       .catch((err) => {
         console.log(err.response.data.message);
-        if (err.response.data.message.includes("Incorrect Password") || err.response.data.message.includes("Login Error")) {
+        if (
+          err.response.data.message.includes("Incorrect Password") ||
+          err.response.data.message.includes("Login Error")
+        ) {
           setSuccess("Login Failed");
         }
       });
@@ -48,7 +51,7 @@ export default function Login() {
   } else if (success === "Login Successful!") {
     renderSignUpMsg = <div className="success">Login Successful!</div>;
   } else {
-    renderSignUpMsg = ""
+    renderSignUpMsg = "";
   }
 
   return (
@@ -71,7 +74,7 @@ export default function Login() {
           </form>
           <div className="flexCenter">
             <div>
-              <span class="dontHaveAccount">Don't have an account?{" "}</span>
+              <span class="dontHaveAccount">Don't have an account? </span>
               <Link
                 to="/signup"
                 style={{
@@ -85,11 +88,9 @@ export default function Login() {
             </div>
           </div>
           <div className="flexCenter">
-          <div className="successMsg">
-              {renderSignUpMsg}
+            <div className="successMsg">{renderSignUpMsg}</div>
           </div>
-          </div>
-          { isLogged ? <SuccessPopUp /> : ""}
+          {isLogged ? <SuccessPopUp /> : ""}
         </div>
       </div>
     </div>

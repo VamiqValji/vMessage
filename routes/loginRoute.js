@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/", auth, async (req, res) => {
+router.post("/", async (req, res) => {
   let isDuplicate = await signUp.findOne({
     email: req.body.email,
     // password: req.body.password,
@@ -30,21 +30,23 @@ router.post("/", auth, async (req, res) => {
     }
     console.log("Correct password.");
     // jwt create & assign token
-    const token = jwt.sign(
-      { id: isDuplicate._id },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "7d" },
-      (err, token) => {
-        if (err) throw err;
-        // else
-        res.json({ token, id: isDuplicate._id });
-      }
+    // const token = jwt.sign(
+    //   { id: isDuplicate._id },
+    //   process.env.ACCESS_TOKEN_SECRET,
+    //   { expiresIn: "7d" },
+    //   (err, token) => {
+    //     if (err) throw err;
+    //     // else
+    //     res.json({ message: "Logged in", token, id: isDuplicate._id });
+    //   }
+    // );
+    return (
+      res
+        .status(201)
+        .json({ message: "Logged in" })
+        // .header("auth-token", token)
+        .send(token)
     );
-    // return res
-    //   .status(201)
-    //   .json({ message: "Logged in" })
-    //   .header("auth-token", token)
-    //   .send(token);
   } else {
     // email not found
     return res.status(400).json({ message: "Login Error" });
