@@ -75,7 +75,7 @@ export default function Login() {
           </form>
           <div className="flexCenter">
             <div>
-              <span class="dontHaveAccount">Don't have an account? </span>
+              <span className="dontHaveAccount">Don't have an account? </span>
               <Link
                 to="/signup"
                 style={{

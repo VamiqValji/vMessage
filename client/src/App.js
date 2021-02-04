@@ -9,6 +9,7 @@ import { logOut, logIn } from "./actions/index";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import PublicChat from "./pages/PublicChat";
 // import { render } from "react-dom";
 
 export default function App() {
@@ -99,6 +100,9 @@ export default function App() {
           </Route> */}
             <Route path="/signup">
               <SignUp />
+            </Route>
+            <Route path="/public">
+              <PublicChat />
             </Route>
             <Route path="/">
               <Home />
