@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import axios from "axios";
 // import logo from './logo.svg';
 import "./App.css";
 import { useSelector, useDispatch } from "react-redux";
-import { logOut } from "./actions/index";
+import { logOut, logIn } from "./actions/index";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -17,7 +18,29 @@ export default function App() {
   let renderLogOut;
   const logOutHandler = () => {
     dispatch(logOut());
+    localStorage.removeItem("token");
   };
+
+  useEffect(
+    () => {
+      console.log("Refresh.");
+      // check if logged in based on token
+      const TOKEN = localStorage.getItem("token");
+      if (!TOKEN) return logOutHandler();
+      // login user if valid token exists
+      axios.defaults.headers.common["auth-token"] = TOKEN;
+      axios
+        .post("http://localhost:3001/login/token/", {
+          token: TOKEN,
+        })
+        .then((res) => {
+          if (res.data.includes("Logged in")) dispatch(logIn());
+        })
+        .catch((err) => {
+          console.log(err.response.data.message);
+        });
+    } /*[]*/
+  );
 
   if (isLogged) {
     renderLogOut = (
@@ -28,13 +51,10 @@ export default function App() {
   } else {
     renderLogOut = (
       <li className="logOut">
-      <Link
-        to="/login"
-        style={{ textDecoration: "none", color: "white" }}
-      >
-        Login
-      </Link>
-    </li>
+        <Link to="/login" style={{ textDecoration: "none", color: "white" }}>
+          Login
+        </Link>
+      </li>
     );
   }
 
@@ -46,15 +66,15 @@ export default function App() {
             <nav>
               <ul>
                 <span className="leftNav">
-                <li>
-                  <Link
-                    to="/"
-                    style={{ textDecoration: "none", color: "white" }}
-                  >
-                    Home
-                  </Link>
-                </li>
-                {/* <li>
+                  <li>
+                    <Link
+                      to="/"
+                      style={{ textDecoration: "none", color: "white" }}
+                    >
+                      Home
+                    </Link>
+                  </li>
+                  {/* <li>
                   <Link
                     to="/login"
                     style={{ textDecoration: "none", color: "white" }}
@@ -63,9 +83,7 @@ export default function App() {
                   </Link>
                 </li> */}
                 </span>
-                <span className="rightNav">
-                  {renderLogOut}
-                </span>
+                <span className="rightNav">{renderLogOut}</span>
                 {/* <li>
               <Link to="/users" style={{ textDecoration: 'none', color: "white" }}>Users</Link>
             </li> */}

@@ -9,6 +9,8 @@ const auth = (req, res, next) => {
     // verify if token is correct
     const verified = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     req.id = verified;
+    // console.log(req.id);
+    res.locals.id = req.id;
     next();
   } catch (err) {
     res.status(401).send("Invalid Token.");

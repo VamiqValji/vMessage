@@ -30,6 +30,7 @@ export default function Login() {
         if (res.data.message.includes("Logged in")) {
           setSuccess("Login Successful!");
           dispatch(logIn());
+          localStorage.setItem("token", res.data.token);
           <Redirect to="/home" />;
         }
       })
