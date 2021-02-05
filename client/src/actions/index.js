@@ -9,3 +9,10 @@ export const logOut = () => {
     type: "LOG_OUT",
   };
 };
+
+export const actionSetUsername = (username) => {
+  return {
+    type: "SET_USERNAME",
+    payload: username,
+  };
+};

@@ -31,13 +31,14 @@ const io = require("socket.io")(server, {
 io.on("connection", (socket) => {
   console.log("User joined.");
   // io.emit("test", "welcome");
+  socket.broadcast.emit("userConnected", "User");
   socket.on("message", (data) => {
     console.log(data);
     socket.broadcast.emit("message", data);
     //^ sends data to every user except user who sent the data
-    // io.on("message", (data) => {
-    //   console.log(data);
-    // });
+  });
+  socket.on("disconnect", () => {
+    socket.broadcast.emit("userDisconnected", "User");
   });
 });
 

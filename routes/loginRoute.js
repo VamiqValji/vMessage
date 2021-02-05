@@ -57,7 +57,7 @@ router.post("/token", auth, async (req, res) => {
   let isDuplicate = await signUp.findOne({
     _id: res.locals.id.id,
   });
-  if (isDuplicate) res.send("Logged in");
+  if (isDuplicate) res.send(`Logged in`); // ,${isDuplicate.email}
 });
 
 module.exports = router;

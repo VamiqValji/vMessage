@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from "axios";
 // import logo from './logo.svg';
 import "./App.css";
 import { useSelector, useDispatch } from "react-redux";
-import { logOut, logIn } from "./actions/index";
+import { logOut, logIn, actionSetUsername } from "./actions/index";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -14,6 +14,8 @@ import PublicChat from "./pages/PublicChat";
 export default function App() {
   const dispatch = useDispatch();
   const isLogged = useSelector((state) => state.isLogged);
+
+  const [username, setUsername] = useState("");
 
   let renderLogOut;
   const logOutHandler = () => {
@@ -35,6 +37,10 @@ export default function App() {
         })
         .then((res) => {
           if (res.data.includes("Logged in")) dispatch(logIn());
+          // useSelector((state) => state.setUsernameReducer);
+          // dispatch(actionSetUsername());
+          // localStorage.setItem("username", res.data.split(",")[1]);
+          dispatch(actionSetUsername(res.data.split(",")[1]));
         })
         .catch((err) => {
           console.log(err.response.data.message);
