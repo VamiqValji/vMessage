@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from "axios";
 // import logo from './logo.svg';
@@ -10,11 +10,6 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import PublicChat from "./pages/PublicChat";
-// import { render } from "react-dom";
-
-//socketio
-import io from "socket.io-client";
-const socket = io.connect("http://localhost:3001");
 
 export default function App() {
   const dispatch = useDispatch();
@@ -25,21 +20,6 @@ export default function App() {
     dispatch(logOut());
     localStorage.removeItem("token");
   };
-
-  //socketio
-  // console.log(socket);
-  useEffect(() => {
-    let test = "data from server";
-    socket.on("test", (test) => {
-      console.log(test);
-    });
-
-    // socket.on("test", );
-
-    // CLEAN UP THE EFFECT => on leave, so socket doesnt unnecessarily stay open
-    return () => socket.disconnect();
-    //
-  }, []);
 
   useEffect(
     () => {
@@ -132,15 +112,3 @@ export default function App() {
     </div>
   );
 }
-
-// function Home() {
-//   return <h2>Home</h2>;
-// }
-
-// function About() {
-//   return <h2>About</h2>;
-// }
-
-// function Users() {
-//   return <h2>Users</h2>;
-// }

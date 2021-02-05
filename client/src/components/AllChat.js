@@ -1,11 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../App.css";
 
-export default function AllChat() {
+import io from "socket.io-client";
+const socket = io.connect("http://localhost:3001");
 
-  const sendMessage = (msg) => {
+export default function AllChat() {
+    useEffect(() => {
+        // data FROM server
+        socket.on("test", (test) => {
+          console.log(test);
+        });
+    
+        // CLEAN UP THE EFFECT => on leave, so socket doesnt unnecessarily stay open
+        return () => socket.disconnect();
+      }, []);
+
+  const sendMessage = (e, msg) => {
+    e.preventDefault();
     console.log(msg);
+    // data TO server
+    socket.emit("message", msg)
+    // clear msg box
+    document.getElementById("msg").innerHTML = "";
   }
+
+  // receive messages from other clients
+  socket.on("message", (data) => {
+    console.log(data);
+  });
 
   return (
     <>
@@ -20,12 +42,12 @@ export default function AllChat() {
                     })}
                 </div>
                 <div className="messageBoxContainer">
-                <div className="messageBox">
+                <form onSubmit={(e) => sendMessage(e, document.getElementById("msg").value)} className="messageBox">
                     <span>
-                        <input type="text" name="Message" id="msg" />
-                        <button onClick={() => sendMessage(document.getElementById("msg").value)}>Send</button>
+                        <input placeholder="Enter message here..." type="text" name="Message" id="msg" />
+                        <button >Send</button>
                     </span>
-                </div>
+                </form>
                 </div>
             </div>
         </div>
