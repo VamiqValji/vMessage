@@ -22,37 +22,24 @@ app.use("/login", loginRoute);
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3000", // origin: "*",
     methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],
   },
 });
 
 io.on("connection", (socket) => {
-  console.log("hi");
-  io.emit("test", "hello");
+  console.log("User joined.");
+  // io.emit("test", "welcome");
+  socket.on("message", (data) => {
+    console.log(data);
+    socket.broadcast.emit("message", data);
+    //^ sends data to every user except user who sent the data
+    // io.on("message", (data) => {
+    //   console.log(data);
+    // });
+  });
 });
-
-// const io = require("socket.io")(
-//   server,
-//   {
-//     cors: {
-//       origin: "http://localhost:3000",
-//       methods: ["GET", "POST"],
-//       allowedHeaders: ["my-custom-header"],
-//     },
-//   },
-//   (socket) => {
-//     io.on("connection", () => {
-//       console.log("hi");
-//       socket.emit("hi", "hi");
-//     });
-//   }
-//   socket.on("connection", ({ name, message }) => {
-//     console.log("hi");
-//   });
-// }
-// );
 
 // connect to database
 let port = process.env.PORT;
