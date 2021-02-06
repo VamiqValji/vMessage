@@ -6,16 +6,21 @@ let socket;
 
 export default function AllChat() {
 
-    const [messages, setMessages] = useState([1,2,3,4,5,6])
-    const [prevMsg, setPrevMsg] = useState("")
+    // const [messages, setMessages] = useState([1,2,3,4,5,6])
     const ENDPOINT = "http://localhost:3001";
 
+    // const usernameRef = useRef("");
+    const [username, setUsername] = useState("");
     const inputRef = useRef("");
     const messageArea = useRef("")
 
-    const addMsg = (msg, who="other") => {
+    const addMsg = (msg, who="other", username="you") => {
       let span = document.createElement("div");
-      span.innerHTML = (`<span key={${msg}} id=${who}><br/>${msg}</span>`);
+      if (who === "other") {
+        span.innerHTML = (`<span key={${msg}} id=${who}><div>${username}</div>${msg}</span>`);
+      } else { // you
+        span.innerHTML = (`<span key={${msg}} id=${who}><br/>${msg}</span>`);
+      }
       document.getElementsByClassName("messageArea")[0].appendChild(span);
       // after changes made to container
       let container = document.getElementsByClassName("messageArea")[0];
@@ -26,24 +31,32 @@ export default function AllChat() {
     const sendMessage = (e) => {
       e.preventDefault();
       let msg = inputRef.current.value;
-      if ( msg < 1) return;
+      if (msg < 1) return;
       console.log(msg);
-      socket.emit("sendMessage", msg);
+      socket.emit("sendMessage", {msg, username: username});
       addMsg(msg, "you");
       inputRef.current.value = "";
     }
 
     useEffect(() => {
-      socket = io(ENDPOINT);
 
-      socket.emit("test", "hi");
-      socket.on("test", (test) => {
-        console.log(test);
-      });
+      let tempUsername;
+      while(true) {
+        tempUsername = window.prompt("Public Rooms use different usernames than your regular account. Enter in a username you would like to use for this session.");
+        if (tempUsername.length > 0) {
+          setUsername(tempUsername);
+          break;
+        } else {
+          window.alert("Please enter a valid username.");
+        }
+      }
+
+      socket = io(ENDPOINT);
+      socket.emit("connected", tempUsername);
       
-      socket.on("receiveMessage", (msg) => {
-        console.log(`Received: ${msg}`);
-        addMsg(msg);
+      socket.on("receiveMessage", (msgInfo) => {
+        console.log(msgInfo);
+        addMsg(msgInfo.msg, "other", msgInfo.username);
       })
     
       // CLEAN UP THE EFFECT => on leave, so socket doesnt unnecessarily stay open
@@ -62,10 +75,10 @@ export default function AllChat() {
             <div className="messagingContainer">
                 <h2 className="">Public Room</h2>
                 <div ref={messageArea} className="messageArea">
-                    <span id="you"><br/>messagemessagemessagemessagemessagemessagemessage</span>
+                    {/* <span id="you"><br/>messagemessagemessagemessagemessagemessagemessage</span>
                     {messages.map((n) => {
                         return <span key={n} id="other"><br/>{n}</span>
-                    })}
+                    })} */}
                 </div>
                 <div className="messageBoxContainer">
                 <form onSubmit={(e) => sendMessage(e)} className="messageBox">

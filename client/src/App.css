@@ -246,13 +246,15 @@ body * {
 .messageArea span#you {
   color: white;
 }
-.messageArea span#other::before {
+/* .messageArea span#other::before {
   content: "User";
+  color: rgba(255, 255, 255, 0.6);
+} */
+.messageArea span#other div {
   color: rgba(255, 255, 255, 0.6);
 }
 .messageArea span#other {
-  /* color: rgba(255, 255, 255, 0.9); */
-  color: pink;
+  color: rgba(255, 255, 255, 0.85);
 }
 .messageBoxContainer {
   display: flex;

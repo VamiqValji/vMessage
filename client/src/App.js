@@ -38,12 +38,15 @@ export default function App() {
         .then((res) => {
           if (res.data.includes("Logged in")) dispatch(logIn());
           // useSelector((state) => state.setUsernameReducer);
-          // dispatch(actionSetUsername());
           // localStorage.setItem("username", res.data.split(",")[1]);
           // dispatch(actionSetUsername(res.data.split(",")[1]));
         })
         .catch((err) => {
-          console.log(err.response.data.message);
+          try {
+            console.log(err.response.data.message);
+          } catch {
+            console.warn(err);
+          }
         });
     } /*[]*/
   );
