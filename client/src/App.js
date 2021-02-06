@@ -40,7 +40,7 @@ export default function App() {
           // useSelector((state) => state.setUsernameReducer);
           // dispatch(actionSetUsername());
           // localStorage.setItem("username", res.data.split(",")[1]);
-          dispatch(actionSetUsername(res.data.split(",")[1]));
+          // dispatch(actionSetUsername(res.data.split(",")[1]));
         })
         .catch((err) => {
           console.log(err.response.data.message);

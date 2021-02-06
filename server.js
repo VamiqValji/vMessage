@@ -32,7 +32,7 @@ io.on("connection", (socket) => {
   console.log("User joined.");
   // io.emit("test", "welcome");
   socket.broadcast.emit("userConnected", "User");
-  socket.on("message", (data) => {
+  socket.on("send-message", (data) => {
     console.log(data);
     socket.broadcast.emit("message", data);
     //^ sends data to every user except user who sent the data

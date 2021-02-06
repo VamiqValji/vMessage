@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import "../App.css";
 
 import io from "socket.io-client";
+// const socket = io.connect("http://localhost:3001");
 
 export default function AllChat() {
 
-  const socket = io.connect("http://localhost:3001");
-
-    console.log(socket)
-
     const [messages, setMessages] = useState([1,2,3,4,5,6])
+    const [prevMsg, setPrevMsg] = useState("")
 
     useEffect(() => {
-        // data FROM server
+      const socket = io("http://localhost:3001");
+
+        socket.emit("test", "hi");
         socket.on("test", (test) => {
           console.log(test);
         });
@@ -20,43 +20,6 @@ export default function AllChat() {
         // CLEAN UP THE EFFECT => on leave, so socket doesnt unnecessarily stay open
         return () => socket.disconnect();
       }, []);
-    
-
-    const addMsg = (msg) => {
-        let span = document.createElement("div");
-        span.innerHTML = (`<span key={${msg}} id="other"><br/>${msg}</span>`);
-        document.getElementsByClassName("messageArea")[0].appendChild(span);
-        // after changes made to container
-        let container = document.getElementsByClassName("messageArea")[0];
-        console.log();
-        container.scrollBy(0,container.scrollHeight);
-    }
-
-
-  const sendMessage = (e, msg) => {
-    e.preventDefault();
-    if (msg.length < 1) return;
-    console.log(msg);
-    // data TO server
-    socket.emit("message", msg)
-    // clear msg box
-    document.getElementById("msg").innerHTML = "";
-    // add chat msg to user's screen
-    addMsg(msg);
-  }
-
-  socket.on("userConnected", (user) => {
-    console.log(`${user} connected.`);
-  });
-  // receive messages from other clients
-  socket.on("message", (data) => {
-    console.log(data);
-    // setMessages(msgs => msgs.push(data));
-    addMsg(data);
-  });
-  socket.on("userDisconnected", (user) => {
-    console.log(`${user} disconnected.`);
-  });
 
   return (
     <>
@@ -71,12 +34,12 @@ export default function AllChat() {
                     })}
                 </div>
                 <div className="messageBoxContainer">
-                <form onSubmit={(e) => sendMessage(e, document.getElementById("msg").value)} className="messageBox">
+                {/* <form onSubmit={(e) => sendMessage(e, document.getElementById("msg").value)} className="messageBox">
                     <span>
                         <input placeholder="Enter message here..." type="text" name="Message" id="msg" />
                         <button >Send</button>
                     </span>
-                </form>
+                </form> */}
                 </div>
             </div>
         </div>
