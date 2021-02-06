@@ -30,16 +30,22 @@ const io = require("socket.io")(server, {
 
 io.on("connection", (socket) => {
   console.log("User joined.");
+  socket.on("disconnected", () => {
+    console.log("User disconnected.");
+  });
+
+  socket.on("sendMessage", (msg) => {
+    console.log(msg);
+    socket.broadcast.emit("receiveMessage", msg);
+  });
+
   // io.emit("test", "welcome");
-  socket.broadcast.emit("userConnected", "User");
-  socket.on("send-message", (data) => {
-    console.log(data);
-    socket.broadcast.emit("message", data);
-    //^ sends data to every user except user who sent the data
-  });
-  socket.on("disconnect", () => {
-    socket.broadcast.emit("userDisconnected", "User");
-  });
+  // socket.broadcast.emit("userConnected", "User");
+  // socket.on("send-message", (data) => {
+  //   console.log(data);
+  //   socket.broadcast.emit("message", data);
+  //   //^ sends data to every user except user who sent the data
+  // });
 });
 
 // connect to database
