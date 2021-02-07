@@ -43,11 +43,11 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("User disconnected.");
     for (let i = 0; i < users.length; i++) {
       if (users[i].id === socket.id) {
         socket.broadcast.emit("userLeft", users[i].username);
         // users.filter(users[i].id === socket.id);
+        console.log(`${users[i].username} left.`);
         users.splice(i, 1);
         console.log(users);
       }

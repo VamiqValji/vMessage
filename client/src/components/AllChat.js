@@ -24,10 +24,11 @@ export default function AllChat() {
     const messageArea = useRef("")
 
     const userEvent = (user=String, EVENT="joined") => {
+      let currentTime = new Date().toLocaleTimeString();
       let span = document.createElement("div");
       try {
         if (EVENT === "joined") {
-          span.innerHTML = (`<span style={{fontSize:25}}>${user} ${EVENT}. ${happyEmotesList[Math.floor(Math.random() * happyEmotesList.length)]}</span>`);
+          span.innerHTML = (`<span style={{fontSize:25}}>${user} ${EVENT}. ${happyEmotesList[Math.floor(Math.random() * happyEmotesList.length)]}<li class="currentTime">${currentTime}</li></span>`);
         } else if (EVENT === "left") {
           span.innerHTML = (`<span style={{fontSize:25}}>${user} ${EVENT}. ${sadEmotesList[Math.floor(Math.random() * sadEmotesList.length)]}</span>`);
         }
@@ -38,11 +39,12 @@ export default function AllChat() {
     }
 
     const addMsg = (msg, who="other", username="you") => {
+      let currentTime = new Date().toLocaleTimeString();
       let span = document.createElement("div");
       if (who === "other") {
-        span.innerHTML = (`<span key={${msg}} id=${who}><div>${username}</div>${msg}</span>`);
+        span.innerHTML = (`<span key={${msg}} id=${who}><div><li>${username}</li><li>${currentTime}</li></div>${msg}</span>`);
       } else { // you
-        span.innerHTML = (`<span key={${msg}} id=${who}><br/>${msg}</span>`);
+        span.innerHTML = (`<span key={${msg}} id=${who}><div><li>You</li><li>${currentTime}</li></div>${msg}</span>`);
       }
       document.getElementsByClassName("messageArea")[0].appendChild(span);
       // after changes made to container

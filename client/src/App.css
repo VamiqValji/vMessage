@@ -239,12 +239,32 @@ body * {
   word-wrap: break-word;
   min-height: 1rem;
 }
-.messageArea span#you::before {
+/* .messageArea span#you::before {
   content: "You";
   color: rgba(255, 255, 255, 0.75);
-}
+} */
 .messageArea span#you {
   color: white;
+}
+.messageArea span#you div {
+  color: rgba(255, 255, 255, 0.75);
+}
+.messageArea span#you li,
+.messageArea span#other li {
+  display: inline-flex;
+}
+
+.messageArea span#you li:last-child,
+.messageArea span#other li:last-child,
+.currentTime {
+  margin-left: 1rem;
+  font-size: 0.8em;
+  color: rgba(255, 255, 255, 0.4);
+}
+.currentTime {
+  display: inline-flex;
+  list-style-type: none;
+  text-decoration: none;
 }
 /* .messageArea span#other::before {
   content: "User";
