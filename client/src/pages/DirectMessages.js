@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../App.css";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import SuccessPopUp from "../components/SuccessPopUp";
 // import DirectChatMenu from "../components/DirectChatMenu";
 import DirectChat from "../components/DirectChat";
@@ -34,6 +35,11 @@ export default function DirectMessages() {
               );
               // return <span key={n} onClick={e => console.log(e.currentTarget.innerHTML)}>User {n}</span>
             })}
+          </div>
+          <div className="addFriend">
+            <Link to="/friends">
+            <button>Add Friends</button>
+            </Link>
           </div>
         </div>
 

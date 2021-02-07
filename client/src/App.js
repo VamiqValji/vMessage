@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import PublicChat from "./pages/PublicChat";
 import DirectMessages from "./pages/DirectMessages";
+import Friends from "./pages/Friends";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -111,9 +112,6 @@ export default function App() {
             <Route path="/login">
               <Login />
             </Route>
-            {/* <Route path="/users">
-            <Users />
-          </Route> */}
             <Route path="/signup">
               <SignUp />
             </Route>
@@ -122,6 +120,9 @@ export default function App() {
             </Route>
             <Route path="/dms">
               <DirectMessages />
+            </Route>
+            <Route path="/friends">
+              <Friends />
             </Route>
             <Route path="/">
               <Home />
