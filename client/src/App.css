@@ -55,6 +55,7 @@ body * {
 }
 
 .logOut {
+  cursor: pointer;
   background: var(--lightGrey);
   border-radius: 1rem;
 }
