@@ -80,12 +80,6 @@ export default function AllChat() {
       socket.emit("connected", tempUsername);
       userEvent("You", "joined");
       
-      // socket.on("changeUsername", (userN) => {
-      //   console.log(userN);
-      //   tempUsername = userN;
-      //   setUsername(tempUsername);
-      // })
-
       socket.on("userJoined", user => {
         console.log(`${user} joined.`);
         userEvent(user, "joined");

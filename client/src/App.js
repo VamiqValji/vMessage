@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import PublicChat from "./pages/PublicChat";
+import DirectMessages from "./pages/DirectMessages";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -51,6 +52,8 @@ export default function App() {
     } /*[]*/
   );
 
+  const linkStyle = { textDecoration: "none", color: "white" }
+
   if (isLogged) {
     renderLogOut = (
       <li className="logOut" onClick={logOutHandler}>
@@ -60,7 +63,7 @@ export default function App() {
   } else {
     renderLogOut = (
       <li className="logOut">
-        <Link to="/login" style={{ textDecoration: "none", color: "white" }}>
+        <Link to="/login" style={linkStyle}>
           Login
         </Link>
       </li>
@@ -78,24 +81,29 @@ export default function App() {
                   <li>
                     <Link
                       to="/"
-                      style={{ textDecoration: "none", color: "white" }}
+                      style={linkStyle}
                     >
                       Home
                     </Link>
                   </li>
-                  {/* <li>
-                  <Link
-                    to="/login"
-                    style={{ textDecoration: "none", color: "white" }}
-                  >
-                    Login
-                  </Link>
-                </li> */}
+                  <li>
+                    <Link
+                      to="/public"
+                      style={linkStyle}
+                    >
+                      Public Chat
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/dms"
+                      style={linkStyle}
+                    >
+                      Direct Messages
+                    </Link>
+                  </li>
                 </span>
                 <span className="rightNav">{renderLogOut}</span>
-                {/* <li>
-              <Link to="/users" style={{ textDecoration: 'none', color: "white" }}>Users</Link>
-            </li> */}
               </ul>
             </nav>
           </div>
@@ -111,6 +119,9 @@ export default function App() {
             </Route>
             <Route path="/public">
               <PublicChat />
+            </Route>
+            <Route path="/dms">
+              <DirectMessages />
             </Route>
             <Route path="/">
               <Home />
