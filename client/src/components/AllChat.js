@@ -116,7 +116,7 @@ export default function AllChat() {
     <div className="flexCenter">
         <div className="loginContainer">
             <div className="messagingContainer">
-                <h2>Public Room<div><span>{playersOnline}</span> Player(s) Online</div></h2>
+                <h2>Public Room<div><span>{playersOnline}</span> User(s) Online</div></h2>
                 <div ref={messageArea} className="messageArea">
                     {/* <span id="you"><br/>messagemessagemessagemessagemessagemessagemessage</span>
                     {messages.map((n) => {
