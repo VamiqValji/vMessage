@@ -22,7 +22,7 @@ app.use("/login", loginRoute);
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, {
   cors: {
-    origin: "http://localhost:3000", // origin: "*",
+    origin: process.env.ORIGIN, // origin: "*",
     methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],
   },
@@ -32,44 +32,48 @@ let users = [];
 io.on("connection", (socket) => {
   // console.log("User joined.");
 
-  const updatePlayersOnline = () => {
-    socket.emit("updatePlayersOnline", users.length);
-    console.log(users.length);
-  };
+  if (
+    socket.handshake.headers.referer.includes(process.env.PUBLIC_CHAT_ENDPOINT)
+  ) {
+    const updatePlayersOnline = () => {
+      socket.emit("updatePlayersOnline", users.length);
+      console.log(users.length);
+    };
 
-  socket.on("connected", (username) => {
-    console.log(`${username} joined.`);
-    // if (users.includes(username)) {
-    //   username += "_dupe";
-    //   socket.emit("changeUsername", username);
-    // }
-    socket.broadcast.emit("userJoined", username);
-    users.push({ id: socket.id, username });
-    updatePlayersOnline();
-  });
+    socket.on("connected", (username) => {
+      console.log(`${username} joined.`);
+      // if (users.includes(username)) {
+      //   username += "_dupe";
+      //   socket.emit("changeUsername", username);
+      // }
+      socket.broadcast.emit("userJoined", username);
+      users.push({ id: socket.id, username });
+      updatePlayersOnline();
+    });
 
-  socket.on("disconnect", () => {
-    for (let i = 0; i < users.length; i++) {
-      if (users[i].id === socket.id) {
-        socket.broadcast.emit("userLeft", users[i].username);
-        // users.filter(users[i].id === socket.id);
-        console.log(`${users[i].username} left.`);
-        users.splice(i, 1);
-        console.log(users);
-        // updatePlayersOnline();
+    socket.on("disconnect", () => {
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].id === socket.id) {
+          socket.broadcast.emit("userLeft", users[i].username);
+          // users.filter(users[i].id === socket.id);
+          console.log(`${users[i].username} left.`);
+          users.splice(i, 1);
+          console.log(users);
+          // updatePlayersOnline();
+        }
       }
-    }
-    if (users.includes(socket.id)) console.log("true");
-    // socket.broadcast.emit("userLeft", username);
-  });
+      if (users.includes(socket.id)) console.log("true");
+      // socket.broadcast.emit("userLeft", username);
+    });
 
-  socket.on("sendMessage", (msgInfo) => {
-    console.log(msgInfo);
-    socket.broadcast.emit("receiveMessage", msgInfo);
-    //^ sends data to every user except user who sent the data
-  });
+    socket.on("sendMessage", (msgInfo) => {
+      console.log(msgInfo);
+      socket.broadcast.emit("receiveMessage", msgInfo);
+      //^ sends data to every user except user who sent the data
+    });
 
-  // io.emit("test", "welcome");
+    // io.emit("test", "welcome");
+  }
 });
 
 // connect to database
