@@ -6,6 +6,13 @@ let socket;
 
 export default function AllChat() {
 
+  let emotesList;
+  try {
+    emotesList = ["😂","😴","😒","😁","😎","😉","😜","😢","😊","🤣","😍"];
+  } catch (err) {
+    console.log("Emotes didn't register.")
+  }
+
     // const [messages, setMessages] = useState([1,2,3,4,5,6])
     const ENDPOINT = "http://localhost:3001";
 
@@ -13,6 +20,18 @@ export default function AllChat() {
     const [username, setUsername] = useState("");
     const inputRef = useRef("");
     const messageArea = useRef("")
+
+    const userJoined = (user) => {
+      let span = document.createElement("div");
+      try {
+        span.innerHTML = (`<span style={{fontSize:25}}>${user} joined. ${emotesList[Math.floor(Math.random() * emotesList.length)]}</span>`);
+      } catch {
+        span.innerHTML = (`<span style={{fontSize:25}}>${user} joined.</span>`);
+      }
+      document.getElementsByClassName("messageArea")[0].appendChild(span);
+      // let container = document.getElementsByClassName("messageArea")[0];
+      // container.scrollBy(0,container.scrollHeight);
+    }
 
     const addMsg = (msg, who="other", username="you") => {
       let span = document.createElement("div");
@@ -24,7 +43,6 @@ export default function AllChat() {
       document.getElementsByClassName("messageArea")[0].appendChild(span);
       // after changes made to container
       let container = document.getElementsByClassName("messageArea")[0];
-      console.log();
       container.scrollBy(0,container.scrollHeight);
     }
     
@@ -42,8 +60,8 @@ export default function AllChat() {
 
       let tempUsername;
       while(true) {
-        tempUsername = window.prompt("Public Rooms use different usernames than your regular account. Enter in a username you would like to use for this session.");
-        if (tempUsername.length > 0) {
+        tempUsername = window.prompt("Public Rooms use different usernames than your regular account. Messages will disappear after you leave; they are session based. Enter in a username you would like to use for this session.");
+        if (tempUsername.length > 0 && tempUsername.length <= 10 && tempUsername !== "You") {
           setUsername(tempUsername);
           break;
         } else {
@@ -53,6 +71,22 @@ export default function AllChat() {
 
       socket = io(ENDPOINT);
       socket.emit("connected", tempUsername);
+      userJoined("You");
+      
+      // socket.on("changeUsername", (userN) => {
+      //   console.log(userN);
+      //   tempUsername = userN;
+      //   setUsername(tempUsername);
+      // })
+
+      socket.on("userJoined", user => {
+        console.log(`${user} joined.`);
+        userJoined(user);
+      })
+
+      socket.on("userLeft", user => {
+        console.log(`${user} left.`);
+      })
       
       socket.on("receiveMessage", (msgInfo) => {
         console.log(msgInfo);
@@ -61,7 +95,7 @@ export default function AllChat() {
     
       // CLEAN UP THE EFFECT => on leave, so socket doesnt unnecessarily stay open
       return () => {
-        socket.emit("disconnected");
+        // socket.emit("disconnect", tempUsername);
         socket.disconnect();
         socket.off();
       }

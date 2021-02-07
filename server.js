@@ -30,13 +30,21 @@ const io = require("socket.io")(server, {
 
 io.on("connection", (socket) => {
   // console.log("User joined.");
+  let users = [];
 
   socket.on("connected", (username) => {
     console.log(`${username} joined.`);
+    // if (users.includes(username)) {
+    //   username += "_dupe";
+    //   socket.emit("changeUsername", username);
+    // }
+    socket.broadcast.emit("userJoined", username);
+    users.push(username);
   });
 
-  socket.on("disconnected", () => {
+  socket.on("disconnect", () => {
     console.log("User disconnected.");
+    // socket.broadcast.emit("userLeft", username);
   });
 
   socket.on("sendMessage", (msgInfo) => {
