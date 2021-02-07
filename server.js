@@ -30,7 +30,7 @@ const io = require("socket.io")(server, {
 
 io.on("connection", (socket) => {
   // console.log("User joined.");
-  let users = [];
+  let users = [""];
 
   socket.on("connected", (username) => {
     console.log(`${username} joined.`);
@@ -39,11 +39,20 @@ io.on("connection", (socket) => {
     //   socket.emit("changeUsername", username);
     // }
     socket.broadcast.emit("userJoined", username);
-    users.push(username);
+    users.push({ id: socket.id, username });
   });
 
   socket.on("disconnect", () => {
     console.log("User disconnected.");
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].id === socket.id) {
+        socket.broadcast.emit("userLeft", users[i].username);
+        // users.filter(users[i].id === socket.id);
+        users.splice(i, 1);
+        console.log(users);
+      }
+    }
+    if (users.includes(socket.id)) console.log("true");
     // socket.broadcast.emit("userLeft", username);
   });
 

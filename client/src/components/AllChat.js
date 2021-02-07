@@ -6,9 +6,11 @@ let socket;
 
 export default function AllChat() {
 
-  let emotesList;
+  let happyEmotesList;
+  let sadEmotesList;
   try {
-    emotesList = ["😂","😴","😒","😁","😎","😉","😜","😢","😊","🤣","😍"];
+    happyEmotesList = ["😂","😴","😁","😎","😉","😜","😊","🤣","😍"];
+    sadEmotesList = ["😒","😢","😪","😨","😓","😭","😰"];
   } catch (err) {
     console.log("Emotes didn't register.")
   }
@@ -21,16 +23,18 @@ export default function AllChat() {
     const inputRef = useRef("");
     const messageArea = useRef("")
 
-    const userJoined = (user) => {
+    const userEvent = (user=String, EVENT="joined") => {
       let span = document.createElement("div");
       try {
-        span.innerHTML = (`<span style={{fontSize:25}}>${user} joined. ${emotesList[Math.floor(Math.random() * emotesList.length)]}</span>`);
+        if (EVENT === "joined") {
+          span.innerHTML = (`<span style={{fontSize:25}}>${user} ${EVENT}. ${happyEmotesList[Math.floor(Math.random() * happyEmotesList.length)]}</span>`);
+        } else if (EVENT === "left") {
+          span.innerHTML = (`<span style={{fontSize:25}}>${user} ${EVENT}. ${sadEmotesList[Math.floor(Math.random() * sadEmotesList.length)]}</span>`);
+        }
       } catch {
-        span.innerHTML = (`<span style={{fontSize:25}}>${user} joined.</span>`);
+        span.innerHTML = (`<span style={{fontSize:25}}>${user} ${EVENT}.</span>`);
       }
       document.getElementsByClassName("messageArea")[0].appendChild(span);
-      // let container = document.getElementsByClassName("messageArea")[0];
-      // container.scrollBy(0,container.scrollHeight);
     }
 
     const addMsg = (msg, who="other", username="you") => {
@@ -71,7 +75,7 @@ export default function AllChat() {
 
       socket = io(ENDPOINT);
       socket.emit("connected", tempUsername);
-      userJoined("You");
+      userEvent("You", "joined");
       
       // socket.on("changeUsername", (userN) => {
       //   console.log(userN);
@@ -81,11 +85,12 @@ export default function AllChat() {
 
       socket.on("userJoined", user => {
         console.log(`${user} joined.`);
-        userJoined(user);
+        userEvent(user, "joined");
       })
 
       socket.on("userLeft", user => {
         console.log(`${user} left.`);
+        userEvent(user, "left");
       })
       
       socket.on("receiveMessage", (msgInfo) => {
@@ -107,7 +112,7 @@ export default function AllChat() {
     <div className="flexCenter">
         <div className="loginContainer">
             <div className="messagingContainer">
-                <h2 className="">Public Room</h2>
+                <h2>Public Room</h2>
                 <div ref={messageArea} className="messageArea">
                     {/* <span id="you"><br/>messagemessagemessagemessagemessagemessagemessage</span>
                     {messages.map((n) => {
