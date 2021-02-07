@@ -20,6 +20,7 @@ export default function AllChat() {
 
     // const usernameRef = useRef("");
     const [username, setUsername] = useState("");
+    const [playersOnline, setPlayersOnline] = useState(0);
     const inputRef = useRef("");
     const messageArea = useRef("")
 
@@ -28,12 +29,12 @@ export default function AllChat() {
       let span = document.createElement("div");
       try {
         if (EVENT === "joined") {
-          span.innerHTML = (`<span style={{fontSize:25}}>${user} ${EVENT}. ${happyEmotesList[Math.floor(Math.random() * happyEmotesList.length)]}<li class="currentTime">${currentTime}</li></span>`);
+          span.innerHTML = (`<span style={{fontSize:25}}><b>${user}</b> ${EVENT}. ${happyEmotesList[Math.floor(Math.random() * happyEmotesList.length)]}<li class="currentTime">${currentTime}</li></span>`);
         } else if (EVENT === "left") {
-          span.innerHTML = (`<span style={{fontSize:25}}>${user} ${EVENT}. ${sadEmotesList[Math.floor(Math.random() * sadEmotesList.length)]}</span>`);
+          span.innerHTML = (`<span style={{fontSize:25}}><b>${user}</b> ${EVENT}. ${sadEmotesList[Math.floor(Math.random() * sadEmotesList.length)]}</span>`);
         }
       } catch {
-        span.innerHTML = (`<span style={{fontSize:25}}>${user} ${EVENT}.</span>`);
+        span.innerHTML = (`<span style={{fontSize:25}}><b>${user}</b> ${EVENT}.</span>`);
       }
       document.getElementsByClassName("messageArea")[0].appendChild(span);
     }
@@ -88,16 +89,23 @@ export default function AllChat() {
       socket.on("userJoined", user => {
         console.log(`${user} joined.`);
         userEvent(user, "joined");
+        setPlayersOnline(prev => prev + 1);
       })
 
       socket.on("userLeft", user => {
         console.log(`${user} left.`);
         userEvent(user, "left");
+        setPlayersOnline(prev => prev - 1);
       })
       
       socket.on("receiveMessage", (msgInfo) => {
         console.log(msgInfo);
         addMsg(msgInfo.msg, "other", msgInfo.username);
+      })
+
+      socket.on("updatePlayersOnline", count => {
+        console.log(count);
+        setPlayersOnline(count);
       })
     
       // CLEAN UP THE EFFECT => on leave, so socket doesnt unnecessarily stay open
@@ -114,7 +122,7 @@ export default function AllChat() {
     <div className="flexCenter">
         <div className="loginContainer">
             <div className="messagingContainer">
-                <h2>Public Room</h2>
+                <h2>Public Room<div><span>{playersOnline}</span> Player(s) Online</div></h2>
                 <div ref={messageArea} className="messageArea">
                     {/* <span id="you"><br/>messagemessagemessagemessagemessagemessagemessage</span>
                     {messages.map((n) => {

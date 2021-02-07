@@ -192,6 +192,20 @@ body * {
   display: flex;
   justify-content: center;
 }
+.messagingContainer h2 div {
+  position: absolute;
+  align-self: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 300;
+  margin-left: 10rem;
+  font-size: 0.6em;
+}
+/* .messagingContainer h2 div span {
+  color: white;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+} */
 .messageArea {
   background: rgba(0, 0, 0, 0.3);
   border-radius: 1rem 0.2rem 0.2rem 1rem;

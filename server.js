@@ -28,9 +28,14 @@ const io = require("socket.io")(server, {
   },
 });
 
+let users = [];
 io.on("connection", (socket) => {
   // console.log("User joined.");
-  let users = [""];
+
+  const updatePlayersOnline = () => {
+    socket.emit("updatePlayersOnline", users.length);
+    console.log(users.length);
+  };
 
   socket.on("connected", (username) => {
     console.log(`${username} joined.`);
@@ -40,6 +45,7 @@ io.on("connection", (socket) => {
     // }
     socket.broadcast.emit("userJoined", username);
     users.push({ id: socket.id, username });
+    updatePlayersOnline();
   });
 
   socket.on("disconnect", () => {
@@ -50,6 +56,7 @@ io.on("connection", (socket) => {
         console.log(`${users[i].username} left.`);
         users.splice(i, 1);
         console.log(users);
+        // updatePlayersOnline();
       }
     }
     if (users.includes(socket.id)) console.log("true");
