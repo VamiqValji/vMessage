@@ -5,6 +5,7 @@ const app = express();
 const cors = require("cors");
 const signUpRoute = require("./routes/signUpRoute");
 const loginRoute = require("./routes/loginRoute");
+const friendsRoute = require("./routes/friendsRoute");
 const dotenv = require("dotenv");
 
 // server.listen(3000);
@@ -17,6 +18,7 @@ app.use(cors({}));
 
 app.use("/signup", signUpRoute);
 app.use("/login", loginRoute);
+app.use("/friends", friendsRoute);
 
 //socketio
 const server = require("http").createServer(app);

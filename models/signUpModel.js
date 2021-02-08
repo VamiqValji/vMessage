@@ -5,7 +5,14 @@ const Schema = mongoose.Schema;
 let signUpSchema = new Schema({
   email: String,
   password: String,
+  friends: Array,
 });
+
+// friends: [
+//   {name: String, messages: [
+//     ["username", "message"]
+//   ]},
+// ],
 
 let signUp = mongoose.model("signUp", signUpSchema);
 
