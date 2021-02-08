@@ -392,3 +392,19 @@ form.messageBox {
   color: white;
   background: rgba(0, 0, 0, 0.7);
 }
+.friendsContainer h2,
+.friendsListContainer .friendsList,
+.friendsListContainer h2 {
+  display: flex;
+  justify-content: center;
+}
+.friendsListContainer .friendsList .chatBoxList {
+  width: 20rem;
+  height: 30rem;
+}
+.friendsContainer h2 {
+  margin: 1.5rem 0rem 0rem 0rem;
+}
+.friendsListContainer h2 {
+  margin: 1rem 0rem -1rem 0rem;
+}

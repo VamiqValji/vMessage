@@ -38,7 +38,7 @@ export default function DirectMessages() {
           </div>
           <div className="addFriend">
             <Link to="/friends">
-            <button>Add Friends</button>
+            <button>Manage Friends</button>
             </Link>
           </div>
         </div>
