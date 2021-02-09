@@ -9,7 +9,7 @@ export default function Friends() {
 
   const inputRef = useRef("")
 
-  const [renderSearchMessage, setRenderSearchMessage] = useState("hi");
+  const [renderSearchMessage, setRenderSearchMessage] = useState("");
 
   const updateRenderSearchMessage = (classN="success", msg=String) => {
     setRenderSearchMessage(
@@ -38,18 +38,13 @@ export default function Friends() {
         })
         .then((res) => {
           console.log(res.data);
-          if (res.data.message.includes("sent")) { // FR found.
-            console.log('found')
-            updateRenderSearchMessage("success", "Friend Request Sent");
-          } else {
-            console.log('NOT found')
-            updateRenderSearchMessage("fail", "Adding Friend Failed");
-          }
+          // user found
+          updateRenderSearchMessage("success", res.data.message);
         })
         .catch((err) => {
           try {
             console.log(err.response.data.message);
-            updateRenderSearchMessage("fail", "Adding Friend Failed");
+            updateRenderSearchMessage("fail", err.response.data.message);
           } catch {
             console.warn(err);
           }

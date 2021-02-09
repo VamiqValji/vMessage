@@ -80,10 +80,12 @@ io.on("connection", (socket) => {
 
 // connect to database
 let port = process.env.PORT;
+mongoose.set("useFindAndModify", false);
 mongoose
   .connect(process.env.DB_CONNECT, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    // useFindAndModify: false,
   })
   .then((result) =>
     server.listen(port, () => console.log("Listening to port " + port))
