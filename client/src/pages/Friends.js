@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import "../App.css";
 import { useSelector } from "react-redux";
 import SuccessPopUp from "../components/SuccessPopUp";
@@ -50,6 +50,35 @@ export default function Friends() {
           }
         });
   }
+
+  const getFriendRequestsData = async () => {
+    // const res = await fetch("http://localhost:3001/friends/requests");
+    // const data = await res.json();
+    // console.log(data);
+
+    const TOKEN = localStorage.getItem("token");
+    if (!TOKEN) return;
+    axios.defaults.headers.common["auth-token"] = TOKEN;
+    axios
+      .post("http://localhost:3001/friends/requests", {
+        token: TOKEN,
+      })
+      .then((res) => {
+        console.log(res.data);
+        updateRenderSearchMessage("success", res.data.message);
+      })
+      .catch((err) => {
+        try {
+          console.log(err.response.data.message);
+        } catch {
+          console.warn(err);
+        }
+      });
+  };
+
+  useEffect(() => {
+    getFriendRequestsData();
+  }, []);
 
   let render = (
     <div className="friendsContainer">

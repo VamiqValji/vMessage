@@ -15,6 +15,30 @@ const auth = require("../middleware/auth");
 //     });
 // });
 
+router.post("/requests", auth, (req, res) => {
+  signUp.findById({ _id: res.locals.id.id }).then((result) => {
+    let frsTo = [];
+    let frsFrom = [];
+    console.log(result);
+    result.friendRequests.forEach((fr) => {
+      if (fr.to) {
+        signUp.findOne({ _id: fr.to }).then((result) => {
+          frsTo.push(result.email);
+        });
+      } else if (fr.from) {
+        signUp.findOne({ _id: fr.from }).then((result) => {
+          frsFrom.push(result.email);
+        });
+      }
+    });
+    res.send({ to: frsTo, from: frsFrom });
+    // incoming, outgoing
+  });
+  // .then((res) => {
+  //   console.log(frs);
+  // });
+});
+
 router.post("/search", auth, async (req, res) => {
   // FRIENDS SCHEMA
   // friends: [
@@ -37,19 +61,19 @@ router.post("/search", auth, async (req, res) => {
       return res.status(401).json({ message: "You can't add yourself!" });
     }
     // check if friend request already sent
-    isDuplicate.friendRequests.forEach((fr) => {
-      try {
-        if (fr.from === res.locals.id.id) {
-          console.log(fr);
-          console.log("Duplicate Friend Request:", fr);
-          // return res
-          //   .status(200)
-          //   .json({ message: "Friend request already sent." });
-        }
-      } catch (err) {
-        throw err;
-      }
-    });
+    // isDuplicate.friendRequests.forEach((fr) => {
+    //   try {
+    //     if (fr.from === res.locals.id.id) {
+    //       console.log(fr);
+    //       console.log("Duplicate Friend Request:", fr);
+    //       // return res
+    //       //   .status(200)
+    //       //   .json({ message: "Friend request already sent." });
+    //     }
+    //   } catch (err) {
+    //     throw err;
+    //   }
+    // });
   } else {
     // if not duplicate, then user doesn't exist
     return res.status(404).json({ message: "User not found." });

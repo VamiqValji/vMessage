@@ -4,7 +4,7 @@ import axios from "axios";
 // import logo from './logo.svg';
 import "./App.css";
 import { useSelector, useDispatch } from "react-redux";
-import { logOut, logIn, actionSetUsername } from "./actions/index";
+import { logOut, logIn/*, actionSetUsername*/ } from "./actions/index";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -17,7 +17,7 @@ export default function App() {
   const dispatch = useDispatch();
   const isLogged = useSelector((state) => state.isLogged);
 
-  const [username, setUsername] = useState("");
+  // const [username, setUsername] = useState("");
 
   let renderLogOut;
   const logOutHandler = () => {
