@@ -1,8 +1,6 @@
 const router = require("express").Router();
 const signUp = require("../models/signUpModel");
 const auth = require("../middleware/auth");
-// const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
 
 // router.get("/", (req, res) => {
 //   signUp
@@ -17,22 +15,8 @@ const auth = require("../middleware/auth");
 
 router.post("/requests", auth, (req, res) => {
   signUp.findById({ _id: res.locals.id.id }).then((result) => {
-    let frsTo = [];
-    let frsFrom = [];
     console.log(result);
-    result.friendRequests.forEach((fr) => {
-      if (fr.to) {
-        signUp.findOne({ _id: fr.to }).then((result) => {
-          frsTo.push(result.email);
-        });
-      } else if (fr.from) {
-        signUp.findOne({ _id: fr.from }).then((result) => {
-          frsFrom.push(result.email);
-        });
-      }
-    });
-    res.send({ to: frsTo, from: frsFrom });
-    // incoming, outgoing
+    return res.status(201).json({ frs: result.friendRequests });
   });
   // .then((res) => {
   //   console.log(frs);

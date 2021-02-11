@@ -10,6 +10,10 @@ export default function Friends() {
   const inputRef = useRef("")
 
   const [renderSearchMessage, setRenderSearchMessage] = useState("");
+  const [frsTo, setFrsTo] = useState([]);
+  const [frsFrom, setFrsFrom] = useState([]);
+  const [friendsLoaded, setFriendsLoaded] = useState(false);
+  let renderFriends;
 
   const updateRenderSearchMessage = (classN="success", msg=String) => {
     setRenderSearchMessage(
@@ -51,11 +55,7 @@ export default function Friends() {
         });
   }
 
-  const getFriendRequestsData = async () => {
-    // const res = await fetch("http://localhost:3001/friends/requests");
-    // const data = await res.json();
-    // console.log(data);
-
+  useEffect(() => {
     const TOKEN = localStorage.getItem("token");
     if (!TOKEN) return;
     axios.defaults.headers.common["auth-token"] = TOKEN;
@@ -65,7 +65,15 @@ export default function Friends() {
       })
       .then((res) => {
         console.log(res.data);
-        updateRenderSearchMessage("success", res.data.message);
+        res.data.frs.forEach((fr) => {
+          try {
+            setFrsTo(prev => prev.push(fr.to));
+          } catch(err) {
+            setFrsFrom(prev => prev.push(fr.from));
+          }
+        })
+        setFriendsLoaded(true);
+        console.log("Data loaded. => ",frsTo,frsFrom,friendsLoaded)
       })
       .catch((err) => {
         try {
@@ -73,12 +81,29 @@ export default function Friends() {
         } catch {
           console.warn(err);
         }
-      });
-  };
-
-  useEffect(() => {
-    getFriendRequestsData();
+      })
   }, []);
+
+  if (friendsLoaded) {
+    renderFriends = (
+      <>
+        {/* <span className="frTo">Outgoing Friend Requests</span>
+        {console.log("FRSTO MAP", frsTo)}
+        {frsTo.map((n) => {(<span key={n}> Friend {n}</span>);})}
+        <span className="frFrom">Incoming Friend Requests</span>
+        {frsFrom.map((n) => {(<span key={n}> Friend {n}</span>);})} */}
+        {["6021ea1165904c52ccb27d43"].map((n) => {return (<span key={n}> Friend {n}</span>);})}
+        <span className="friends">Friend</span>
+        {[1,23,4].map((n) => {return (<span key={n}> Friend {n}</span>);
+          // return <span key={n} onClick={e => console.log(e.currentTarget.innerHTML)}>User {n}</span>
+        })}
+      </>
+    )
+  } else {
+    renderFriends = (
+      <div>Loading...</div>
+    )
+  }
 
   let render = (
     <div className="friendsContainer">
@@ -109,9 +134,7 @@ export default function Friends() {
           <h2>Friends List</h2>
             <div className="friendsList">
               <div className="chatBoxList">
-                {[1,23,4].map((n) => {return (<span key={n}> Friend {n}</span>);
-                  // return <span key={n} onClick={e => console.log(e.currentTarget.innerHTML)}>User {n}</span>
-                })}
+                {renderFriends}
               </div>
             </div>
         </div>
