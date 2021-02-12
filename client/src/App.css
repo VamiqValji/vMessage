@@ -373,6 +373,7 @@ form.messageBox {
   background: rgba(0, 0, 0, 0.5);
   border-radius: 1rem;
   color: rgba(255, 255, 255, 0.9);
+  overflow-wrap: break-word;
 }
 .addFriend {
   display: flex;

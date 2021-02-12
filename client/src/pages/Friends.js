@@ -3,6 +3,7 @@ import "../App.css";
 import { useSelector } from "react-redux";
 import SuccessPopUp from "../components/SuccessPopUp";
 import axios from "axios";
+// import FriendsList from "../components/FriendsList";
 
 export default function Friends() {
   const isLogged = useSelector((state) => state.isLogged);
@@ -13,7 +14,7 @@ export default function Friends() {
   const [frsTo, setFrsTo] = useState([]);
   const [frsFrom, setFrsFrom] = useState([]);
   const [friendsLoaded, setFriendsLoaded] = useState(false);
-  let renderFriends;
+  const [renderFriendsList, setRenderFriendsList] = useState(<div>Loading...</div>);
 
   const updateRenderSearchMessage = (classN="success", msg=String) => {
     setRenderSearchMessage(
@@ -22,6 +23,48 @@ export default function Friends() {
           <div className={classN} style={{fontSize:20}}>{msg}</div>
         </div>
       </div>
+    )
+  }
+
+  const renderFriendsListFunc = (to=[], from=[]) => {
+  let renderTos;
+  let renderFroms;
+    if (to.length > 0) {
+      renderTos = (
+        <>
+          <span className="frTo">Outgoing Friend Requests ({to.length})</span>
+            {to.map((n) => {
+            return <span key={n}>{n}</span> 
+            })}
+          
+        </>
+      )
+    }
+    if (from.length > 0) {
+      renderFroms = (
+        <>
+          <span className="frFrom">Incoming Friend Requests ({from.length})</span>
+          {to.map((n) => {
+          return <span key={n}>{n}</span> 
+          })}
+        </>
+      )
+    }
+
+    setRenderFriendsList(
+      <>
+        {/* <span className="frTo">Outgoing Friend Requests</span>
+        {console.log("FRSTO MAP", frsTo)}
+        {frsTo.map((n) => {(<span key={n}> Friend {n}</span>);})}
+        <span className="frFrom">Incoming Friend Requests</span>
+        {frsFrom.map((n) => {(<span key={n}> Friend {n}</span>);})} */}
+        {renderTos}
+        {renderFroms}
+        <span className="friends">Friend</span>
+        {[1,23,4].map((n) => {return (<span key={n}> Friend {n}</span>);
+          // return <span key={n} onClick={e => console.log(e.currentTarget.innerHTML)}>User {n}</span>
+        })}
+      </>
     )
   }
 
@@ -73,7 +116,8 @@ export default function Friends() {
           }
         })
         setFriendsLoaded(true);
-        console.log("Data loaded. => ",frsTo,frsFrom,friendsLoaded)
+        renderFriendsListFunc(frsTo, frsFrom);
+        console.log("Data loaded. => ",frsTo,frsFrom,friendsLoaded);
       })
       .catch((err) => {
         try {
@@ -84,62 +128,38 @@ export default function Friends() {
       })
   }, []);
 
+  let render = <div>hi</div>;
   if (friendsLoaded) {
-    renderFriends = (
-      <>
-        {/* <span className="frTo">Outgoing Friend Requests</span>
-        {console.log("FRSTO MAP", frsTo)}
-        {frsTo.map((n) => {(<span key={n}> Friend {n}</span>);})}
-        <span className="frFrom">Incoming Friend Requests</span>
-        {frsFrom.map((n) => {(<span key={n}> Friend {n}</span>);})} */}
-        {["6021ea1165904c52ccb27d43"].map((n) => {return (<span key={n}> Friend {n}</span>);})}
-        <span className="friends">Friend</span>
-        {[1,23,4].map((n) => {return (<span key={n}> Friend {n}</span>);
-          // return <span key={n} onClick={e => console.log(e.currentTarget.innerHTML)}>User {n}</span>
-        })}
-      </>
-    )
-  } else {
-    renderFriends = (
-      <div>Loading...</div>
+    render = (
+      <div className="friendsContainer">
+        <h2>Add Friend</h2>
+        <div className="messageBoxContainer">
+            <form onSubmit={(e) => searchFriends(e)} className="messageBox">
+              <span>
+                <input
+                  ref={inputRef} 
+                  placeholder="Search Username"
+                  type="text"
+                  name="Message"
+                  id="msg"
+                />
+                <button>Search</button>
+              </span>
+            </form>
+          </div>
+          {renderSearchMessage}
+          <div className="friendsListContainer">
+            <h2>Friends List</h2>
+              <div className="friendsList">
+                <div className="chatBoxList">
+                  {friendsLoaded ? renderFriendsList : <div style={{fontSize: 25}} className="flexCenter">Loading...</div> }
+                </div>
+              </div>
+          </div>
+      </div>
     )
   }
 
-  let render = (
-    <div className="friendsContainer">
-      <h2>Add Friend</h2>
-      <div className="messageBoxContainer">
-          <form onSubmit={(e) => searchFriends(e)} className="messageBox">
-            <span>
-              <input
-                ref={inputRef} 
-                placeholder="Search Username"
-                type="text"
-                name="Message"
-                id="msg"
-              />
-              <button>Search</button>
-            </span>
-          </form>
-        </div>
-        {renderSearchMessage}
-        {/* <div className="flexCenter" style={{marginBottom:50, marginTop: -30 }}>
-          <div className="successMsg">
-          <div className="success">test</div>
-          </div>
-  </div> */}
-  {/*FINISH RENDER ON FRIEND FIND, UPDATE FRIENDS*/}
-        {/*renderSearchMessage*/}
-        <div className="friendsListContainer">
-          <h2>Friends List</h2>
-            <div className="friendsList">
-              <div className="chatBoxList">
-                {renderFriends}
-              </div>
-            </div>
-        </div>
-    </div>
-  )
 
   return (
     <div className="App">
