@@ -36,21 +36,44 @@ export default function Friends() {
     if (action === "add") return addUser();
     // at this point, action === "delete" 
     // DELETE USER
+    // client removal
     let index;
     console.log("before removal", to, from);
-    if (classN === "frTo") {
-      index = to.findIndex(a => a === user);
-      if (index === -1) return;
-      to.splice(index, 1);
-      setFrsTo(to);
-    } else {
-      index = from.findIndex(a => a === user);
-      if (index === -1) return;
-      from.splice(index, 1);
-      setFrsFrom(from);
-    }
+
+    /* COMMENTED OUT FOR DB TESTING */
+    // if (classN === "frTo") {
+    //   index = to.findIndex(a => a === user);
+    //   if (index === -1) return;
+    //   to.splice(index, 1);
+    //   setFrsTo(to);
+    // } else {
+    //   index = from.findIndex(a => a === user);
+    //   if (index === -1) return;
+    //   from.splice(index, 1);
+    //   setFrsFrom(from);
+    // }
+    /* COMMENTED OUT FOR DB TESTING */
+
+    //db removal
+    const TOKEN = localStorage.getItem("token");
+    if (!TOKEN) return;
+    axios.defaults.headers.common["auth-token"] = TOKEN;
+    axios
+      .post("http://localhost:3001/friends/requests/delete", {
+        username: user,
+        token: TOKEN,
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        try {
+          console.log(err.response.data.message);
+        } catch {
+          console.warn(err);
+        }
+      });
     console.log("removed", to, from);
-    
   }
 
   const renderFriendsListFunc = (to=[], from=[]) => {
