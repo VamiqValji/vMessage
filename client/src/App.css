@@ -409,3 +409,32 @@ form.messageBox {
 .friendsListContainer h2 {
   margin: 1rem 0rem -1rem 0rem;
 }
+.frTo,
+.frFrom {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 1rem;
+}
+.frTo i,
+.frFrom i {
+  margin: 1rem 0rem 0rem 1rem;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  min-width: 2rem;
+  min-height: 2rem;
+  text-align: center;
+}
+.frTo i:first-of-type,
+.frFrom i:first-of-type {
+  margin-left: 1rem;
+}
+.frTo h3 {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+  font-size: 1.3em;
+  text-align: center;
+}

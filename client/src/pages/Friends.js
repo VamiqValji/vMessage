@@ -26,44 +26,66 @@ export default function Friends() {
     )
   }
 
+  const addUser = () => {
+    console.log("Added");
+  }
+
+  const addOrDeleteUser = (user=String, action=String, to=Array, from=Array, classN=String) => {
+    action = action.replace("check", "add").replace("times", "delete");
+    console.log(user, action, to, from, classN);
+    if (action === "add") return addUser();
+    // at this point, action === "delete" 
+    // DELETE USER
+    let index;
+    console.log("before removal", to, from);
+    if (classN === "frTo") {
+      index = to.findIndex(a => a === user);
+      if (index === -1) return;
+      to.splice(index, 1);
+      setFrsTo(to);
+    } else {
+      index = from.findIndex(a => a === user);
+      if (index === -1) return;
+      from.splice(index, 1);
+      setFrsFrom(from);
+    }
+    console.log("removed", to, from);
+    
+  }
+
   const renderFriendsListFunc = (to=[], from=[]) => {
-  let renderTos;
-  let renderFroms;
+    
+    let renderTos;
+    let renderFroms;
+
+    const renderFrs = (list=[], classN) => {
+      return (
+      <>
+        <div className={classN}>
+          <h3>{classN === "frTo"? "Outgoing" : "Incoming"} Friend Requests ({list.length})</h3>
+          {list.map((n) => { // e.currentTarget.firstChild.innerHTML
+          return <span key={n}><data>{n}</data><i onClick={e => {
+            addOrDeleteUser(n, e.currentTarget.className.replace("fas fa-", ""), to, from, classN);
+          }} class="fas fa-check"></i><i onClick={e => {
+            addOrDeleteUser(n, e.currentTarget.className.replace("fas fa-", ""), to, from, classN);
+          }} class="fas fa-times"></i></span> 
+          })}
+        </div>
+      </>)
+    }
+
     if (to.length > 0) {
-      renderTos = (
-        <>
-          <span className="frTo">Outgoing Friend Requests ({to.length})</span>
-            {to.map((n) => {
-            return <span key={n}>{n}</span> 
-            })}
-          
-        </>
-      )
+      renderTos = (renderFrs(to,"frTo"))
     }
     if (from.length > 0) {
-      renderFroms = (
-        <>
-          <span className="frFrom">Incoming Friend Requests ({from.length})</span>
-          {to.map((n) => {
-          return <span key={n}>{n}</span> 
-          })}
-        </>
-      )
+      renderFroms = (renderFrs(from,"frFrom"))
     }
 
     setRenderFriendsList(
       <>
-        {/* <span className="frTo">Outgoing Friend Requests</span>
-        {console.log("FRSTO MAP", frsTo)}
-        {frsTo.map((n) => {(<span key={n}> Friend {n}</span>);})}
-        <span className="frFrom">Incoming Friend Requests</span>
-        {frsFrom.map((n) => {(<span key={n}> Friend {n}</span>);})} */}
         {renderTos}
         {renderFroms}
-        <span className="friends">Friend</span>
-        {[1,23,4].map((n) => {return (<span key={n}> Friend {n}</span>);
-          // return <span key={n} onClick={e => console.log(e.currentTarget.innerHTML)}>User {n}</span>
-        })}
+        {[1,23,4].map((n) => {return (<span key={n}> Friend {n}</span>);})}
       </>
     )
   }
@@ -128,7 +150,7 @@ export default function Friends() {
       })
   }, []);
 
-  let render = <div>hi</div>;
+  let render = <div>Loading...</div>;
   if (friendsLoaded) {
     render = (
       <div className="friendsContainer">
