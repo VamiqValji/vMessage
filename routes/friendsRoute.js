@@ -23,6 +23,61 @@ router.post("/requests", auth, (req, res) => {
   // });
 });
 
+router.post("/requests/add", auth, async (req, res) => {
+  // FRIENDS SCHEMA
+  // friends: [
+  //   {name: String, messages: [
+  //     ["username", "message"]
+  //   ]},
+  // ],
+  // "name:" represents name of friend,
+  // messages: ["username", "message"] username
+  // represents the username of the person who sent
+  // the message in the second index([1]) of the list
+
+  let requestUser = await signUp.findOne({
+    _id: res.locals.id.id,
+  });
+
+  const returnJSON = (requestedUser = Boolean) => {
+    let user;
+    let msg;
+    if (requestedUser) {
+      user = requestUser.email;
+      msg = `Hi, ${req.body.username}`;
+    } else {
+      user = req.body.username;
+      msg = `Hi, ${requestUser.email}`;
+    }
+    return {
+      name: user,
+      messages: [[user, msg]],
+    };
+  };
+
+  await signUp.findOneAndUpdate(
+    {
+      _id: res.locals.id.id,
+    },
+    {
+      $addToSet: {
+        friends: returnJSON(true),
+      },
+    }
+  );
+  await signUp.findOneAndUpdate(
+    {
+      email: req.body.username,
+    },
+    {
+      $addToSet: {
+        friends: returnJSON(false),
+      },
+    }
+  );
+  return res.status(201).json({ message: "Added friend." });
+});
+
 router.post("/requests/delete", auth, async (req, res) => {
   let requestUser = await signUp.findOne({
     _id: res.locals.id.id,
@@ -51,13 +106,6 @@ router.post("/requests/delete", auth, async (req, res) => {
 });
 
 router.post("/search", auth, async (req, res) => {
-  // FRIENDS SCHEMA
-  // friends: [
-  //   {name: String, messages: [
-  //     ["username", "message"]
-  //   ]},
-  // ],
-
   let isDuplicate = await signUp.findOne({
     email: req.body.search,
   });

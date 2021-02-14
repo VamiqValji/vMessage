@@ -26,14 +26,55 @@ export default function Friends() {
     )
   }
 
-  const addUser = () => {
+  const deleteUser = (user="",to=[],from=[],classN="") => {
+    const TOKEN = localStorage.getItem("token");
+    if (!TOKEN) return;
+    axios.defaults.headers.common["auth-token"] = TOKEN;
+    axios
+      .post("http://localhost:3001/friends/requests/delete", {
+        username: user,
+        token: TOKEN,
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        try {
+          console.log(err.response.data.message);
+        } catch {
+          console.warn(err);
+        }
+      });
+    console.log("removed", to, from);
+  }
+
+  const addUser = (user="",to=[],from=[],classN="") => {
     console.log("Added");
+    const TOKEN = localStorage.getItem("token");
+    if (!TOKEN) return;
+    axios.defaults.headers.common["auth-token"] = TOKEN;
+    axios
+      .post("http://localhost:3001/friends/requests/add", {
+        username: user,
+        token: TOKEN,
+      })
+      .then((res) => {
+        console.log("res data: ", res.data);
+        if (res.data.message.includes("Added")) return deleteUser(user,to,from,classN);
+      })
+      .catch((err) => {
+        try {
+          console.log(err.response.data.message);
+        } catch {
+          console.warn(err);
+        }
+      });
   }
 
   const addOrDeleteUser = (user=String, action=String, to=Array, from=Array, classN=String) => {
     action = action.replace("check", "add").replace("times", "delete");
     console.log(user, action, to, from, classN);
-    if (action === "add") return addUser();
+    if (action === "add") return addUser(user,to,from,classN);
     // at this point, action === "delete" 
     // DELETE USER
     // client removal
@@ -55,25 +96,7 @@ export default function Friends() {
     /* COMMENTED OUT FOR DB TESTING */
 
     //db removal
-    const TOKEN = localStorage.getItem("token");
-    if (!TOKEN) return;
-    axios.defaults.headers.common["auth-token"] = TOKEN;
-    axios
-      .post("http://localhost:3001/friends/requests/delete", {
-        username: user,
-        token: TOKEN,
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        try {
-          console.log(err.response.data.message);
-        } catch {
-          console.warn(err);
-        }
-      });
-    console.log("removed", to, from);
+    deleteUser(user,to,from,classN);
   }
 
   const renderFriendsListFunc = (to=[], from=[]) => {
