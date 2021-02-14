@@ -24,13 +24,16 @@ router.post("/requests", auth, (req, res) => {
 });
 
 router.post("/requests/delete", auth, async (req, res) => {
+  let requestUser = await signUp.findOne({
+    _id: res.locals.id.id,
+  });
   await signUp.findOneAndUpdate(
     {
-      _id: req.body.username,
+      email: req.body.username,
     },
     {
       $pull: {
-        friendRequests: { from: res.locals.id.id },
+        friendRequests: { from: requestUser.email },
       },
     }
   );
@@ -89,6 +92,10 @@ router.post("/search", auth, async (req, res) => {
 
   // update user's friendRequests (TO)
 
+  let requestUser = await signUp.findOne({
+    _id: res.locals.id.id,
+  });
+
   await signUp.findOneAndUpdate(
     {
       _id: res.locals.id.id,
@@ -96,7 +103,7 @@ router.post("/search", auth, async (req, res) => {
     {
       $addToSet: {
         // addToSet works like push but pushes if no duplicates of object
-        friendRequests: { to: isDuplicate._id.toString() },
+        friendRequests: { to: isDuplicate.email },
       },
     }
   );
@@ -108,7 +115,7 @@ router.post("/search", auth, async (req, res) => {
     {
       $addToSet: {
         // addToSet works like push but pushes if no duplicates of object
-        friendRequests: { from: res.locals.id.id.toString() },
+        friendRequests: { from: requestUser.email },
       },
     }
   );

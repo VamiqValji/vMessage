@@ -37,21 +37,21 @@ export default function Friends() {
     // at this point, action === "delete" 
     // DELETE USER
     // client removal
-    let index;
     console.log("before removal", to, from);
-
+    
     /* COMMENTED OUT FOR DB TESTING */
-    // if (classN === "frTo") {
-    //   index = to.findIndex(a => a === user);
-    //   if (index === -1) return;
-    //   to.splice(index, 1);
-    //   setFrsTo(to);
-    // } else {
-    //   index = from.findIndex(a => a === user);
-    //   if (index === -1) return;
-    //   from.splice(index, 1);
-    //   setFrsFrom(from);
-    // }
+    let index;
+    if (classN === "frTo") {
+      index = to.findIndex(a => a === user);
+      if (index === -1) return;
+      to.splice(index, 1);
+      setFrsTo(to);
+    } else {
+      index = from.findIndex(a => a === user);
+      if (index === -1) return;
+      from.splice(index, 1);
+      setFrsFrom(from);
+    }
     /* COMMENTED OUT FOR DB TESTING */
 
     //db removal
