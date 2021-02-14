@@ -24,12 +24,6 @@ router.post("/requests", auth, (req, res) => {
 });
 
 router.post("/requests/delete", auth, async (req, res) => {
-  console.log(req.body.username);
-  // remove from both accounts
-  console.log("before removal");
-  await signUp.findOne({ _id: req.body.username }).then((result) => {
-    console.log("1", result.friendRequests);
-  });
   await signUp.findOneAndUpdate(
     {
       _id: req.body.username,
@@ -40,9 +34,6 @@ router.post("/requests/delete", auth, async (req, res) => {
       },
     }
   );
-  await signUp.findOne({ _id: res.locals.id.id }).then((result) => {
-    console.log("2", result.friendRequests);
-  });
   await signUp.findOneAndUpdate(
     {
       _id: res.locals.id.id,
@@ -54,7 +45,6 @@ router.post("/requests/delete", auth, async (req, res) => {
     }
   );
   console.log({ from: res.locals.id.id }, { to: req.body.username });
-  console.log("after removal");
 });
 
 router.post("/search", auth, async (req, res) => {
@@ -106,7 +96,7 @@ router.post("/search", auth, async (req, res) => {
     {
       $addToSet: {
         // addToSet works like push but pushes if no duplicates of object
-        friendRequests: { to: isDuplicate._id },
+        friendRequests: { to: isDuplicate._id.toString() },
       },
     }
   );
@@ -118,7 +108,7 @@ router.post("/search", auth, async (req, res) => {
     {
       $addToSet: {
         // addToSet works like push but pushes if no duplicates of object
-        friendRequests: { from: res.locals.id.id },
+        friendRequests: { from: res.locals.id.id.toString() },
       },
     }
   );
