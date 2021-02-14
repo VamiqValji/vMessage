@@ -43,11 +43,11 @@ router.post("/requests/add", auth, async (req, res) => {
     let user;
     let msg;
     if (requestedUser) {
-      user = requestUser.email;
-      msg = `Hi, ${req.body.username}`;
-    } else {
       user = req.body.username;
       msg = `Hi, ${requestUser.email}`;
+    } else {
+      user = requestUser.email;
+      msg = `Hi, ${req.body.username}`;
     }
     return {
       name: user,
@@ -110,14 +110,25 @@ router.post("/search", auth, async (req, res) => {
     email: req.body.search,
   });
 
-  // let thisUser = await signUp.findOne({
-  //   _id: res.locals.id.id,
-  // });
+  let requestUser = await signUp.findOne({
+    _id: res.locals.id.id,
+  });
 
   if (isDuplicate) {
     // check if user is trying to add themselves
     if (isDuplicate.id === res.locals.id.id) {
       return res.status(401).json({ message: "You can't add yourself!" });
+    }
+    // check if user is already friends
+    // with who they are trying to add
+    for (let i = 0; i < requestUser.friends.length; i++) {
+      console.log(requestUser.friends[i].name);
+      console.log(isDuplicate.email);
+      if (requestUser.friends[i].name === isDuplicate.email) {
+        return res
+          .status(401)
+          .json({ message: "This person is already your friend!" });
+      }
     }
     // check if friend request already sent
     // isDuplicate.friendRequests.forEach((fr) => {
@@ -139,10 +150,6 @@ router.post("/search", auth, async (req, res) => {
   }
 
   // update user's friendRequests (TO)
-
-  let requestUser = await signUp.findOne({
-    _id: res.locals.id.id,
-  });
 
   await signUp.findOneAndUpdate(
     {
