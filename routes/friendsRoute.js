@@ -2,16 +2,12 @@ const router = require("express").Router();
 const signUp = require("../models/signUpModel");
 const auth = require("../middleware/auth");
 
-// router.get("/", (req, res) => {
-//   signUp
-//     .find() // finds all as no other parameters are specified
-//     .then((result) => {
-//       res.send(result);
-//     })
-//     .then((req) => {
-//       console.log(req);
-//     });
-// });
+router.get("/get", auth, (req, res) => {
+  signUp.findById({ _id: res.locals.id.id }).then((result) => {
+    console.log(result);
+    return res.status(201).json({ friends: result.friends });
+  });
+});
 
 router.post("/requests", auth, (req, res) => {
   signUp.findById({ _id: res.locals.id.id }).then((result) => {

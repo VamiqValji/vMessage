@@ -30,39 +30,45 @@ export default function Friends() {
     );
   };
 
+  const deleteUserFromUI = (remUser, classN) => {
+    console.log("removing: ", remUser);
+
+    remUser.remove();
+
+    let frHeader = document.getElementsByClassName(classN);
+    if (frHeader.length <= 1) frHeader[0].remove();
+  };
   const deleteUser = (
     user = "",
     to = [],
     from = [],
     classN = "",
-    remUser = <></>
+    remUser = <></>,
+    deleteFromDB = true
   ) => {
-    // const TOKEN = localStorage.getItem("token");
-    // if (!TOKEN) return;
-    // axios.defaults.headers.common["auth-token"] = TOKEN;
-    // axios
-    //   .post("http://localhost:3001/friends/requests/delete", {
-    //     username: user,
-    //     token: TOKEN,
-    //   })
-    //   .then((res) => {
-    //     console.log(res.data);
-    //   })
-    //   .catch((err) => {
-    //     try {
-    //       console.log(err.response.data.message);
-    //     } catch {
-    //       console.warn(err);
-    //     }
-    //   });
-    // console.log("removed", to, from);
+    if (deleteFromDB) {
+      const TOKEN = localStorage.getItem("token");
+      if (!TOKEN) return;
+      axios.defaults.headers.common["auth-token"] = TOKEN;
+      axios
+        .post("http://localhost:3001/friends/requests/delete", {
+          username: user,
+          token: TOKEN,
+        })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          try {
+            console.log(err.response.data.message);
+          } catch {
+            console.warn(err);
+          }
+        });
+      console.log("removed", to, from);
+    }
 
-    remUser.remove();
-    console.log(remUser);
-
-    let frHeader = document.getElementsByClassName(classN);
-    if (frHeader.length <= 1) frHeader[0].remove();
-    // console.log(frHeader);
+    deleteUserFromUI(remUser);
   };
 
   const addUser = (
@@ -72,27 +78,28 @@ export default function Friends() {
     classN = "",
     remUser = <></>
   ) => {
-    // console.log("Added");
-    // const TOKEN = localStorage.getItem("token");
-    // if (!TOKEN) return;
-    // axios.defaults.headers.common["auth-token"] = TOKEN;
-    // axios
-    //   .post("http://localhost:3001/friends/requests/add", {
-    //     username: user,
-    //     token: TOKEN,
-    //   })
-    //   .then((res) => {
-    //     console.log("res data: ", res.data);
-    //     if (res.data.message.includes("Added"))
-    //       return deleteUser(user, to, from, classN);
-    //   })
-    //   .catch((err) => {
-    //     try {
-    //       console.log(err.response.data.message);
-    //     } catch {
-    //       console.warn(err);
-    //     }
-    //   });
+    console.log("Added");
+    const TOKEN = localStorage.getItem("token");
+    if (!TOKEN) return;
+    axios.defaults.headers.common["auth-token"] = TOKEN;
+    axios
+      .post("http://localhost:3001/friends/requests/add", {
+        username: user,
+        token: TOKEN,
+      })
+      .then((res) => {
+        console.log("res data: ", res.data);
+        if (res.data.message.includes("Added"))
+          return deleteUser(user, to, from, classN);
+      })
+      .catch((err) => {
+        try {
+          console.log(err.response.data.message);
+        } catch {
+          console.warn(err);
+        }
+      });
+    deleteUserFromUI(remUser, classN);
 
     let container = document.getElementsByClassName("chatBoxList")[0];
     console.log(container);
@@ -211,15 +218,55 @@ export default function Friends() {
       renderFroms = renderFrs(from, "frFrom");
     }
 
-    setRenderFriendsList(
-      <>
-        {renderTos}
-        {renderFroms}
-        {[1, 23, 4].map((n) => {
-          return <span key={n}> Friend {n}</span>;
-        })}
-      </>
-    );
+    let friends = [];
+    // FRIENDS SCHEMA
+    // friends: [
+    //   {name: String, messages: [
+    //     ["username", "message"]
+    //   ]},
+    // ],
+    const TOKEN = localStorage.getItem("token");
+    if (!TOKEN) return;
+    axios.defaults.headers.common["auth-token"] = TOKEN;
+    axios
+      .get("http://localhost:3001/friends/get")
+      .then((res) => {
+        console.log("get friends", res.data);
+        res.data.friends.forEach((friend) => {
+          friends.push(friend.name);
+        });
+        setRenderFriendsList(
+          <>
+            {renderTos}
+            {renderFroms}
+            {friends.map((n) => {
+              return (
+                <span key={n}>
+                  {" "}
+                  Friend {n}
+                  <i
+                    onClick={(e) => {
+                      // REMOVE FRIEND!
+                      // addOrDeleteUser(
+                      //   n,
+                      //   e.currentTarget.className.replace("fas fa-", ""),
+                      //   to,
+                      //   from,
+                      //   classN
+                      // );
+                      console.log("remove friend!");
+                    }}
+                    class="fas fa-times"
+                  ></i>
+                </span>
+              );
+            })}
+          </>
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const searchFriends = (e) => {
@@ -263,14 +310,15 @@ export default function Friends() {
       .then((res) => {
         console.log(res.data);
         res.data.frs.forEach((fr) => {
+          console.log("pushing: ", fr);
           try {
             setFrsTo((prev) => prev.push(fr.to));
           } catch (err) {
             setFrsFrom((prev) => prev.push(fr.from));
           }
         });
-        setFriendsLoaded(true);
         renderFriendsListFunc(frsTo, frsFrom);
+        setFriendsLoaded(true);
         console.log("Data loaded. => ", frsTo, frsFrom, friendsLoaded);
       })
       .catch((err) => {
