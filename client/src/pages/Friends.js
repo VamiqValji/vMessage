@@ -56,8 +56,13 @@ export default function Friends() {
     //     }
     //   });
     // console.log("removed", to, from);
+
     remUser.remove();
     console.log(remUser);
+
+    let frHeader = document.getElementsByClassName(classN);
+    if (frHeader.length <= 1) frHeader[0].remove();
+    // console.log(frHeader);
   };
 
   const addUser = (
@@ -93,17 +98,14 @@ export default function Friends() {
     console.log(container);
     let child = document.createElement("span");
     let x = document.createElement("span");
-    x.addEventListener("click", () => {
-      console.log("test");
+    child.addEventListener("click", () => {
+      deleteUser(user, to, from, classN, child);
+      // console.log("child", child.innerHTML);
+      // child.remove();
     });
+    // console.log("remuser", remUser);
     x.innerHTML = `<i class="fas fa-times"></i>`;
     child.innerHTML = `<data>${remUser.childNodes[0].innerHTML}</data> ${x.innerHTML}`;
-    // child.innerHTML = (
-    //   <>
-    //     <data>{remUser.childNodes[0].innerHTML}</data>
-    //     {x.innerHTML}
-    //   </>
-    // );
     console.log(x);
     container.appendChild(child);
     // remUser.remove();
