@@ -1,16 +1,38 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../App.css";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import SuccessPopUp from "../components/SuccessPopUp";
 // import DirectChatMenu from "../components/DirectChatMenu";
 import DirectChat from "../components/DirectChat";
+import axios from "axios";
 
 export default function DirectMessages() {
   const isLogged = useSelector((state) => state.isLogged);
 
   const [currentUser, setCurrentUser] = useState("");
-  let usersList = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const [friends, setFriends] = useState([]);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    let tempFriendsList = [];
+    const TOKEN = localStorage.getItem("token");
+    if (!TOKEN) return;
+    axios.defaults.headers.common["auth-token"] = TOKEN;
+    axios
+      .get("http://localhost:3001/friends/get")
+      .then((res) => {
+        console.log("get friends", res.data);
+        res.data.friends.forEach((friend) => {
+          // console.log("friend", friend);
+          tempFriendsList.push(friend.name);
+        })
+        setData(res.data);
+        setFriends(tempFriendsList);
+      })
+  }, [])
+
+  // let usersList = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   let render;
   if (isLogged) {
@@ -20,7 +42,7 @@ export default function DirectMessages() {
         <div className="chatContainer">
           <h2><div>Friends</div></h2>
           <div className="chatBoxList">
-            {usersList.map((n) => {
+            {friends.map((n) => {
               return (
                 <span
                   key={n}
@@ -44,7 +66,7 @@ export default function DirectMessages() {
         </div>
 
         <div>
-          <DirectChat currentUser={currentUser} />
+          <DirectChat currentUser={currentUser} data={data} />
         </div>
         {/* going to pass down props from direct chat menu to direct chat (current room, contact, etc.) */}
       </div>
