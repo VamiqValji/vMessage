@@ -52,7 +52,7 @@ export default function DirectMessages() {
                     setCurrentUser(clickedUser);
                   }}
                 >
-                  Friend {n}
+                  {/*Friend*/}{n}
                 </span>
               );
               // return <span key={n} onClick={e => console.log(e.currentTarget.innerHTML)}>User {n}</span>

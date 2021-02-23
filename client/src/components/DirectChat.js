@@ -3,11 +3,34 @@ import "../App.css";
 
 export default function DirectChatMenu({ currentUser, data }) {
   const inputRef = useRef("");
-  // const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [renderMessages, setRenderMessages] = useState();
 
   useEffect(() => {
-    console.log("data", data.friends);
-  }, [data])
+    let currentUserMessages = [];
+    if (data.friends !== undefined) {
+      console.log("data", data.friends);
+      data.friends.map(info => {
+        console.log(info.name + currentUser)
+        if (info.name === currentUser) {
+          console.log("info.name === currentUser")
+          currentUserMessages.push(info.messages);
+        }
+      });
+      setMessages(currentUserMessages);
+      setRenderMessages(
+        messages.map(message => {
+          return (<span id="you">
+          <div>
+            <li>{message[0][0]}</li>
+            <li>{new Date().toLocaleTimeString()}</li>
+          </div>
+          {message[0][1]}
+        </span>)
+        })
+      )
+    }
+  }, [data, currentUser])
 
   const sendMessage = (e) => {
     e.preventDefault();
@@ -15,7 +38,10 @@ export default function DirectChatMenu({ currentUser, data }) {
     inputRef.current.value = "";
   };
 
-  console.log(currentUser);
+  console.log("msgs", messages);
+  messages.map(message => console.log("adawdawd",message[0]));
+  // console.log(currentUser);
+
   return (
     <>
       <div className="messagingContainer">
@@ -24,29 +50,13 @@ export default function DirectChatMenu({ currentUser, data }) {
             {currentUser.length > 0
               ? currentUser
               : "Select A Friend to Chat With"}
-            {/* <div>
-            <span></span> User(s) Online
-          </div> */}
           </h2>
           <div className="messageArea">
-            {/* <span id="you">
-              <div>
-                <li>You</li>
-                <li>time</li>
-              </div>
-              msg
-            </span> */}
-
-            {data.friends.messages.map(info => (
-              <span key={info.name} id="you">
-                <div>
-                  <li>{info.name}</li>
-                  <li>time</li>
-                </div>
-                msg
-              </span>
-            ))}
-
+            {messages.length > 0 ? (
+              renderMessages
+            ) : (
+              "No messages here!"
+            ) }
           </div>
           <div className="messageBoxContainer">
             <form onSubmit={(e) => sendMessage(e)} className="messageBox">
