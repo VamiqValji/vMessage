@@ -39,11 +39,20 @@ io.on("connection", (socket) => {
   if (socket.handshake.headers.referer.includes(process.env.DM_ENDPOINT)) {
     let room = "";
     socket.on("connected", (data) => {
-      console.log(data);
-      room = data.room;
-      socket.join(data.room);
+      // console.log(data);
+
+      let reqUser = data.username;
+      let chosenUser = data.currentUser;
+      // consistent room names
+      if (reqUser.length > chosenUser.length) {
+        room = `${reqUser},${chosenUser}`;
+      } else {
+        room = `${chosenUser},${reqUser}`;
+      }
+
+      socket.join(room);
       console.log(
-        `'${data.username}' joined room '${data.room}' with '${data.currentUser}'.`
+        `'${data.username}' joined room '${room}' with '${data.currentUser}'.`
       );
       // socket.broadcast.emit("userJoined", username);
       dmUsers.push({ id: socket.id, username: data.username });

@@ -77,7 +77,7 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
 
   useEffect(() => {
     socket = io(ENDPOINT);
-    socket.emit("connected", {username: yourUsername, currentUser: currentUser, room: `${yourUsername}to${currentUser}`});
+    socket.emit("connected", {username: yourUsername, currentUser: currentUser/*, room: `${yourUsername}to${currentUser}`*/});
     console.log(`currentUser(${currentUser})`)
     if (currentUser !== "") { // have selected user
       socket.on("receiveMessage", (msgInfo) => {
