@@ -5,7 +5,9 @@ const auth = require("../middleware/auth");
 router.get("/get", auth, (req, res) => {
   signUp.findById({ _id: res.locals.id.id }).then((result) => {
     console.log(result);
-    return res.status(201).json({ friends: result.friends });
+    return res
+      .status(201)
+      .json({ friends: result.friends, yourUsername: result.email });
   });
 });
 

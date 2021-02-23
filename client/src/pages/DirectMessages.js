@@ -13,6 +13,7 @@ export default function DirectMessages() {
   const [currentUser, setCurrentUser] = useState("");
   const [friends, setFriends] = useState([]);
   const [data, setData] = useState([]);
+  const [yourUsername, setYourUsername] = useState("");
 
   useEffect(() => {
     let tempFriendsList = [];
@@ -22,6 +23,7 @@ export default function DirectMessages() {
     axios
       .get("http://localhost:3001/friends/get")
       .then((res) => {
+        setYourUsername(res.data.yourUsername);
         console.log("get friends", res.data);
         res.data.friends.forEach((friend) => {
           // console.log("friend", friend);
@@ -66,7 +68,7 @@ export default function DirectMessages() {
         </div>
 
         <div>
-          <DirectChat currentUser={currentUser} data={data} />
+          <DirectChat currentUser={currentUser} data={data} yourUsername={yourUsername} />
         </div>
         {/* going to pass down props from direct chat menu to direct chat (current room, contact, etc.) */}
       </div>

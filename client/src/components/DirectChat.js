@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import "../App.css";
 
-export default function DirectChatMenu({ currentUser, data }) {
+export default function DirectChatMenu({ currentUser, data, yourUsername }) {
   const inputRef = useRef("");
   const [messages, setMessages] = useState([]);
   const [renderMessages, setRenderMessages] = useState();
@@ -19,10 +19,10 @@ export default function DirectChatMenu({ currentUser, data }) {
       });
       setMessages(currentUserMessages);
       setRenderMessages(
-        messages.map(message => {
-          return (<span id="you">
+        currentUserMessages.map(message => {
+          return (<span key={message[0][0] + (Math.random()).toString()} id={message[0][0] === yourUsername ? "you" : "other"}>
           <div>
-            <li>{message[0][0]}</li>
+            <li>{message[0][0] === yourUsername ? `${message[0][0]} (You)` : message[0][0]}</li>
             <li>{new Date().toLocaleTimeString()}</li>
           </div>
           {message[0][1]}
@@ -32,11 +32,47 @@ export default function DirectChatMenu({ currentUser, data }) {
     }
   }, [data, currentUser])
 
+  //
+  // const userEvent = (user=String, EVENT="joined") => {
+  //   let currentTime = new Date().toLocaleTimeString();
+  //   let span = document.createElement("div");
+  //   try {
+  //     if (EVENT === "joined") {
+  //       span.innerHTML = (`<span style={{fontSize:25}}><b>${user}</b> ${EVENT}. ${happyEmotesList[Math.floor(Math.random() * happyEmotesList.length)]}<li class="currentTime">${currentTime}</li></span>`);
+  //     } else if (EVENT === "left") {
+  //       span.innerHTML = (`<span style={{fontSize:25}}><b>${user}</b> ${EVENT}. ${sadEmotesList[Math.floor(Math.random() * sadEmotesList.length)]}</span>`);
+  //     }
+  //   } catch {
+  //     span.innerHTML = (`<span style={{fontSize:25}}><b>${user}</b> ${EVENT}.</span>`);
+  //   }
+  //   document.getElementsByClassName("messageArea")[0].appendChild(span);
+  // }
+
+  const addMsg = (msg, who="other", username="you") => {
+    let currentTime = new Date().toLocaleTimeString();
+    let span = document.createElement("div");
+    let key = `${msg}${(Math.random()).toString()}`;
+    if (who === "other") {
+      span.innerHTML = (`<span key={${key}} id=${who}><div><li>${username}</li><li>${currentTime}</li></div>${msg}</span>`);
+    } else { // you
+      span.innerHTML = (`<span key={${key}} id=${who}><div><li>${yourUsername} (You)</li><li>${currentTime}</li></div>${msg}</span>`);
+    }
+    document.getElementsByClassName("messageArea")[0].appendChild(span);
+    // after changes made to container
+    let container = document.getElementsByClassName("messageArea")[0];
+    container.scrollBy(0,container.scrollHeight);
+  }
+  
   const sendMessage = (e) => {
     e.preventDefault();
-    console.log(inputRef.current.value);
+    let msg = inputRef.current.value;
+    if (msg < 1) return;
+    console.log(msg);
+    // socket.emit("sendMessage", {msg, username: username});
+    addMsg(msg, "you");
     inputRef.current.value = "";
-  };
+  }
+  //
 
   console.log("msgs", messages);
   messages.map(message => console.log("adawdawd",message[0]));

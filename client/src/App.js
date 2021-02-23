@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect /*, useState*/ } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from "axios";
 // import logo from './logo.svg';
 import "./App.css";
 import { useSelector, useDispatch } from "react-redux";
-import { logOut, logIn/*, actionSetUsername*/ } from "./actions/index";
+import { logOut, logIn /*, actionSetUsername*/ } from "./actions/index";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -53,7 +53,7 @@ export default function App() {
     } /*[]*/
   );
 
-  const linkStyle = { textDecoration: "none", color: "white" }
+  const linkStyle = { textDecoration: "none", color: "white" };
 
   if (isLogged) {
     renderLogOut = (
@@ -80,26 +80,17 @@ export default function App() {
               <ul>
                 <span className="leftNav">
                   <li>
-                    <Link
-                      to="/"
-                      style={linkStyle}
-                    >
+                    <Link to="/" style={linkStyle}>
                       Home
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      to="/public"
-                      style={linkStyle}
-                    >
+                    <Link to="/public" style={linkStyle}>
                       Public Chat
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      to="/dms"
-                      style={linkStyle}
-                    >
+                    <Link to="/dms" style={linkStyle}>
                       Direct Messages
                     </Link>
                   </li>
