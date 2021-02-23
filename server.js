@@ -37,16 +37,22 @@ io.on("connection", (socket) => {
   // console.log("User joined.");
 
   if (socket.handshake.headers.referer.includes(process.env.DM_ENDPOINT)) {
-    socket.on("connected", (username) => {
-      console.log(`${username} joined.`);
+    let room = "";
+    socket.on("connected", (data) => {
+      console.log(data);
+      room = data.room;
+      socket.join(data.room);
+      console.log(
+        `'${data.username}' joined room '${data.room}' with '${data.currentUser}'.`
+      );
       // socket.broadcast.emit("userJoined", username);
-      dmUsers.push({ id: socket.id, username });
+      dmUsers.push({ id: socket.id, username: data.username });
       // updatePlayersOnline();
     });
 
     socket.on("sendMessage", (msgInfo) => {
       console.log(msgInfo);
-      socket.broadcast.emit("receiveMessage", msgInfo);
+      socket.to(room).broadcast.emit("receiveMessage", msgInfo);
       //^ sends data to every user except user who sent the data
     });
 

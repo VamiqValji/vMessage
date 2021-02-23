@@ -64,7 +64,7 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
   const sendMessage = (e) => {
     e.preventDefault();
     let msg = inputRef.current.value;
-    if (msg < 1) return;
+    if (msg < 1 || currentUser === "") return;
     console.log(msg);
     socket.emit("sendMessage", {msg, username: yourUsername});
     addMsg(msg, "you");
@@ -77,9 +77,9 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
 
   useEffect(() => {
     socket = io(ENDPOINT);
-    socket.emit("connected", yourUsername);
+    socket.emit("connected", {username: yourUsername, currentUser: currentUser, room: `${yourUsername}to${currentUser}`});
+    console.log(`currentUser(${currentUser})`)
     if (currentUser !== "") { // have selected user
-
       socket.on("receiveMessage", (msgInfo) => {
         console.log(msgInfo);
         addMsg(msgInfo.msg, "other", msgInfo.username);
@@ -87,8 +87,6 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
 
     }
     // userEvent("You", "joined");
-
-
 
     // socket.on("updatePlayersOnline", (count) => {
     //   console.log(count);
@@ -101,7 +99,7 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
       socket.disconnect();
       socket.off();
     };
-  }, [ENDPOINT]);
+  }, [ENDPOINT, currentUser]);
 
   return (
     <>
