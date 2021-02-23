@@ -1,10 +1,15 @@
 import { useRef, useState, useEffect } from "react";
 import "../App.css";
 
+import io from "socket.io-client";
+let socket;
+
 export default function DirectChatMenu({ currentUser, data, yourUsername }) {
   const inputRef = useRef("");
   const [messages, setMessages] = useState([]);
   const [renderMessages, setRenderMessages] = useState();
+
+  const ENDPOINT = "http://localhost:3001";
 
   useEffect(() => {
     let currentUserMessages = [];
@@ -33,18 +38,11 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
   }, [data, currentUser])
 
   //
+
   // const userEvent = (user=String, EVENT="joined") => {
   //   let currentTime = new Date().toLocaleTimeString();
   //   let span = document.createElement("div");
-  //   try {
-  //     if (EVENT === "joined") {
-  //       span.innerHTML = (`<span style={{fontSize:25}}><b>${user}</b> ${EVENT}. ${happyEmotesList[Math.floor(Math.random() * happyEmotesList.length)]}<li class="currentTime">${currentTime}</li></span>`);
-  //     } else if (EVENT === "left") {
-  //       span.innerHTML = (`<span style={{fontSize:25}}><b>${user}</b> ${EVENT}. ${sadEmotesList[Math.floor(Math.random() * sadEmotesList.length)]}</span>`);
-  //     }
-  //   } catch {
-  //     span.innerHTML = (`<span style={{fontSize:25}}><b>${user}</b> ${EVENT}.</span>`);
-  //   }
+  //   span.innerHTML = `<span style={{fontSize:25}}><b>${user}</b> ${EVENT}.<li class="currentTime">${currentTime}</li></span>`;
   //   document.getElementsByClassName("messageArea")[0].appendChild(span);
   // }
 
@@ -68,7 +66,7 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
     let msg = inputRef.current.value;
     if (msg < 1) return;
     console.log(msg);
-    // socket.emit("sendMessage", {msg, username: username});
+    socket.emit("sendMessage", {msg, username: yourUsername});
     addMsg(msg, "you");
     inputRef.current.value = "";
   }
@@ -76,7 +74,34 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
 
   console.log("msgs", messages);
   messages.map(message => console.log("adawdawd",message[0]));
-  // console.log(currentUser);
+
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("connected", yourUsername);
+    if (currentUser !== "") { // have selected user
+
+      socket.on("receiveMessage", (msgInfo) => {
+        console.log(msgInfo);
+        addMsg(msgInfo.msg, "other", msgInfo.username);
+      });
+
+    }
+    // userEvent("You", "joined");
+
+
+
+    // socket.on("updatePlayersOnline", (count) => {
+    //   console.log(count);
+    //   setPlayersOnline(count);
+    // });
+
+    // CLEAN UP THE EFFECT => on leave, so socket doesnt unnecessarily stay open
+    return () => {
+      // socket.emit("disconnect", tempUsername);
+      socket.disconnect();
+      socket.off();
+    };
+  }, [ENDPOINT]);
 
   return (
     <>

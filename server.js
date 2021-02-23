@@ -31,10 +31,39 @@ const io = require("socket.io")(server, {
 });
 
 let users = [];
+let dmUsers = [];
+
 io.on("connection", (socket) => {
   // console.log("User joined.");
 
-  if (
+  if (socket.handshake.headers.referer.includes(process.env.DM_ENDPOINT)) {
+    socket.on("connected", (username) => {
+      console.log(`${username} joined.`);
+      // socket.broadcast.emit("userJoined", username);
+      dmUsers.push({ id: socket.id, username });
+      // updatePlayersOnline();
+    });
+
+    socket.on("sendMessage", (msgInfo) => {
+      console.log(msgInfo);
+      socket.broadcast.emit("receiveMessage", msgInfo);
+      //^ sends data to every user except user who sent the data
+    });
+
+    socket.on("disconnect", () => {
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].id === socket.id) {
+          // socket.broadcast.emit("userLeft", users[i].username);
+          console.log(`${users[i].username} left.`);
+          users.splice(i, 1);
+          console.log(users);
+          // updatePlayersOnline();
+        }
+      }
+      if (users.includes(socket.id)) console.log("true");
+      // socket.broadcast.emit("userLeft", username);
+    });
+  } else if (
     socket.handshake.headers.referer.includes(process.env.PUBLIC_CHAT_ENDPOINT)
   ) {
     const updatePlayersOnline = () => {
