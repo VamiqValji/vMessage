@@ -37,6 +37,10 @@ io.on("connection", (socket) => {
   // console.log("User joined.");
 
   if (socket.handshake.headers.referer.includes(process.env.DM_ENDPOINT)) {
+    const addMessagesToDB = (msgInfo = Object, room = String) => {
+      console.log(msgInfo, room);
+    };
+
     let room = "";
     socket.on("connected", (data) => {
       // console.log(data);
@@ -61,22 +65,21 @@ io.on("connection", (socket) => {
 
     socket.on("sendMessage", (msgInfo) => {
       console.log(msgInfo);
+      addMessagesToDB(msgInfo, room);
       socket.to(room).broadcast.emit("receiveMessage", msgInfo);
       //^ sends data to every user except user who sent the data
     });
 
     socket.on("disconnect", () => {
-      for (let i = 0; i < users.length; i++) {
-        if (users[i].id === socket.id) {
-          // socket.broadcast.emit("userLeft", users[i].username);
-          console.log(`${users[i].username} left.`);
-          users.splice(i, 1);
-          console.log(users);
+      for (let i = 0; i < dmUsers.length; i++) {
+        if (dmUsers[i].id === socket.id) {
+          // socket.broadcast.emit("userLeft", dmUsers[i].username);
+          console.log(`${dmUsers[i].username} left.`);
+          dmUsers.splice(i, 1);
+          console.log(dmUsers);
           // updatePlayersOnline();
         }
       }
-      if (users.includes(socket.id)) console.log("true");
-      // socket.broadcast.emit("userLeft", username);
     });
   } else if (
     socket.handshake.headers.referer.includes(process.env.PUBLIC_CHAT_ENDPOINT)
