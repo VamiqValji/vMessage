@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const signUp = require("../models/signUpModel");
+const messages = require("../models/messagesModel");
 const auth = require("../middleware/auth");
 
 router.get("/get", auth, (req, res) => {
@@ -32,26 +33,14 @@ router.post("/requests/add", auth, async (req, res) => {
   // messages: ["username", "message"] username
   // represents the username of the person who sent
   // the message in the second index([1]) of the list
+  // ^^^ DEPRECATED // NOT IN USE ANYMORE
 
   let requestUser = await signUp.findOne({
     _id: res.locals.id.id,
   });
 
-  const returnJSON = (requestedUser = Boolean) => {
-    let user;
-    let msg;
-    if (requestedUser) {
-      user = req.body.username;
-      msg = `Hi, ${requestUser.email}`;
-    } else {
-      user = requestUser.email;
-      msg = `Hi, ${req.body.username}`;
-    }
-    return {
-      name: user,
-      messages: [[user, msg]],
-    };
-  };
+  const consistent = [requestUser.email, req.body.username].sort();
+  const groupName = `${consistent[0]},${consistent[1]}`; // reference to 'messages' section of DB
 
   await signUp.findOneAndUpdate(
     {
@@ -59,7 +48,8 @@ router.post("/requests/add", auth, async (req, res) => {
     },
     {
       $addToSet: {
-        friends: returnJSON(true),
+        friends: req.body.username,
+        messages: groupName,
       },
     }
   );
@@ -69,10 +59,22 @@ router.post("/requests/add", auth, async (req, res) => {
     },
     {
       $addToSet: {
-        friends: returnJSON(false),
+        friends: requestUser.email,
+        messages: groupName,
       },
     }
   );
+
+  groupChatOrDM = new messages({
+    groupNickname: groupName,
+    groupName: groupName,
+    DM_or_GC: true,
+    members: [requestUser.email, req.body.username],
+    messages: [],
+    owner: req.body.username,
+  });
+  groupChatOrDM.save();
+
   return res.status(201).json({ message: "Added friend." });
 });
 

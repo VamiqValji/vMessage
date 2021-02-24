@@ -32,7 +32,7 @@ router.post("/", async (req, res) => {
     // password: req.body.password,
   });
   console.log(item);
-  // item.save();
+  item.save();
   // jwt create & assign token
   const token = jwt.sign(
     { id: item._id },
