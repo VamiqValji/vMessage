@@ -38,7 +38,7 @@ io.on("connection", (socket) => {
 
   if (socket.handshake.headers.referer.includes(process.env.DM_ENDPOINT)) {
     const addMessagesToDB = (msgInfo = Object, room = String) => {
-      console.log(msgInfo, room);
+      console.log("Adding to DB.", msgInfo, room);
     };
 
     let room = "";
@@ -47,12 +47,18 @@ io.on("connection", (socket) => {
 
       let reqUser = data.username;
       let chosenUser = data.currentUser;
-      // consistent room names
-      if (reqUser.length > chosenUser.length) {
-        room = `${reqUser},${chosenUser}`;
-      } else {
-        room = `${chosenUser},${reqUser}`;
-      }
+      // CONSISTENT ROOM NAMES
+
+      // METHOD #1
+      // if (reqUser.length > chosenUser.length) {
+      //   room = `${reqUser},${chosenUser}`;
+      // } else {
+      //   room = `${chosenUser},${reqUser}`;
+      // }
+
+      // METHOD #2
+      let consistent = [reqUser, chosenUser].sort();
+      room = `${consistent[0]},${consistent[1]}`;
 
       socket.join(room);
       console.log(
@@ -84,18 +90,21 @@ io.on("connection", (socket) => {
   } else if (
     socket.handshake.headers.referer.includes(process.env.PUBLIC_CHAT_ENDPOINT)
   ) {
+    const publicRoom = "publicRoom";
+
     const updatePlayersOnline = () => {
-      socket.emit("updatePlayersOnline", users.length);
+      socket.to(publicRoom).emit("updatePlayersOnline", users.length);
       console.log(users.length);
     };
 
     socket.on("connected", (username) => {
+      socket.join(publicRoom);
       console.log(`${username} joined.`);
       // if (users.includes(username)) {
       //   username += "_dupe";
       //   socket.emit("changeUsername", username);
       // }
-      socket.broadcast.emit("userJoined", username);
+      socket.to(publicRoom).broadcast.emit("userJoined", username);
       users.push({ id: socket.id, username });
       updatePlayersOnline();
     });
@@ -103,7 +112,7 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
       for (let i = 0; i < users.length; i++) {
         if (users[i].id === socket.id) {
-          socket.broadcast.emit("userLeft", users[i].username);
+          socket.to(publicRoom).broadcast.emit("userLeft", users[i].username);
           // users.filter(users[i].id === socket.id);
           console.log(`${users[i].username} left.`);
           users.splice(i, 1);
@@ -117,7 +126,7 @@ io.on("connection", (socket) => {
 
     socket.on("sendMessage", (msgInfo) => {
       console.log(msgInfo);
-      socket.broadcast.emit("receiveMessage", msgInfo);
+      socket.to(publicRoom).broadcast.emit("receiveMessage", msgInfo);
       //^ sends data to every user except user who sent the data
     });
 
