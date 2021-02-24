@@ -6,7 +6,7 @@ let signUpSchema = new Schema({
   email: String,
   password: String,
   friends: Array,
-  messages: Array,
+  chats: Array, // names of chats
   friendRequests: Array,
 });
 

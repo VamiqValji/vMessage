@@ -49,7 +49,7 @@ router.post("/requests/add", auth, async (req, res) => {
     {
       $addToSet: {
         friends: req.body.username,
-        messages: groupName,
+        chats: { name: groupName, isDM: true },
       },
     }
   );
@@ -60,7 +60,7 @@ router.post("/requests/add", auth, async (req, res) => {
     {
       $addToSet: {
         friends: requestUser.email,
-        messages: groupName,
+        chats: { name: groupName, isDM: true },
       },
     }
   );
@@ -68,7 +68,7 @@ router.post("/requests/add", auth, async (req, res) => {
   groupChatOrDM = new messages({
     groupNickname: groupName,
     groupName: groupName,
-    DM_or_GC: true,
+    isDM: true,
     members: [requestUser.email, req.body.username],
     messages: [],
     owner: req.body.username,

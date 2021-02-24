@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 let messagesSchema = new Schema({
   groupNickname: String,
   groupName: String,
-  DM_or_Not: Boolean, // true if dm, false if gc
+  isDM: Boolean, // true if dm, false if gc
   members: Array,
   messages: Array, // user, msg
   owner: String,
