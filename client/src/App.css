@@ -20,6 +20,16 @@ body * {
   font-family: "Poppins", sans-serif;
 }
 
+/* SHORTCUTS */
+
+/* center */
+.center {
+  display: flex;
+  justify-content: center;
+}
+
+/* SHORTCUTS */
+
 .appContainer {
   background-color: var(--grey);
   /* display: flex;

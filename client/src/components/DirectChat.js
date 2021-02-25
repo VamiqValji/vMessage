@@ -49,7 +49,7 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
                         ? `${message.author} (You)`
                         : message.author}
                     </li>
-                    <li>{message.timeSent}</li>
+                    <li>{new Date(message.timeSent).toLocaleTimeString()}</li>
                   </div>
                   {message.message}
                 </span>
@@ -98,7 +98,6 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
     username = "you",
     saveToDB = false
   ) => {
-    console.log("addmsg", msg, who, username);
     let currentTime = new Date().toLocaleTimeString();
     let span = document.createElement("div");
     let key = `${msg}${Math.random().toString()}`;
@@ -112,7 +111,7 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
     // after changes made to container
     let container = document.getElementsByClassName("messageArea")[0];
     container.scrollBy(0, container.scrollHeight);
-    if (saveToDB) addMsgToDB(currentUser, msg, new Date().toLocaleTimeString());
+    if (saveToDB) addMsgToDB(currentUser, msg, new Date().toUTCString());
   };
 
   const sendMessage = (e) => {
@@ -170,7 +169,7 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
             {messages.length > 0 ? (
               renderMessages
             ) : (
-              <div className="c">No messages here!</div>
+              <div className="center">No messages here!</div>
             )}
           </div>
           <div className="messageBoxContainer">
