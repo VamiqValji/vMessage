@@ -18,41 +18,43 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
     // room name
     let consistent = [yourUsername, currentUser].sort();
     let roomName = `${consistent[0]},${consistent[1]}`;
-    // request
+    // request - returns GC / DM info
     const TOKEN = localStorage.getItem("token");
     if (!TOKEN) return;
     axios.defaults.headers.common["auth-token"] = TOKEN;
     axios
       .post("http://localhost:3001/friends/get/messages", {
         roomName: roomName
-      }) // returns GC / DM info
+      })
       .then((res) => {
         try {
           console.log("get friends", res.data);
-          res.data.friends.forEach((friend) => {
-            // tempFriendsList.push(friend);
+          res.data.messages.forEach((message) => {
+            if (message !== undefined) {
+              currentUserMessages.push(message);
+            }
           })
+
+          console.log("currentUserMessages", currentUserMessages);
+          setMessages(currentUserMessages);
+          setRenderMessages(
+            currentUserMessages.map(message => {
+              return (
+                <span key={message.message + (Math.random()).toString()} id={message.author === yourUsername ? "you" : "other"}>
+                  <div>
+                    <li>{message.author === yourUsername ? `${message.author} (You)` : message.author}</li>
+                    <li>{new Date().toLocaleTimeString()}</li>
+                  </div>
+                  {message.message}
+                </span>
+                )
+            })
+          )
+
         } catch(err) {
           console.warn("ERROR", err);
         }
       })
-    //   if (data.friends !== undefined) {
-    //     data.friends.map(info => {
-    //     currentUserMessages.push(info.messages);
-    //   });
-    //   setMessages(currentUserMessages);
-    //   setRenderMessages(
-    //     currentUserMessages.map(message => {
-    //       return (<span key={message[0][0] + (Math.random()).toString()} id={message[0][0] === yourUsername ? "you" : "other"}>
-    //       <div>
-    //         <li>{message[0][0] === yourUsername ? `${message[0][0]} (You)` : message[0][0]}</li>
-    //         <li>{new Date().toLocaleTimeString()}</li>
-    //       </div>
-    //       {message[0][1]}
-    //     </span>)
-    //     })
-    //   )
-    // }
   }, [data, currentUser])
 
   //
