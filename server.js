@@ -37,9 +37,9 @@ io.on("connection", (socket) => {
   // console.log("User joined.");
 
   if (socket.handshake.headers.referer.includes(process.env.DM_ENDPOINT)) {
-    const addMessagesToDB = (msgInfo = Object, room = String) => {
-      console.log("Adding to DB.", msgInfo, room);
-    };
+    // const addMessagesToDB = (msgInfo = Object, room = String) => {
+    //   console.log("Adding to DB.", msgInfo, room);
+    // };
 
     let room = "";
     socket.on("connected", (data) => {
@@ -71,7 +71,9 @@ io.on("connection", (socket) => {
 
     socket.on("sendMessage", (msgInfo) => {
       console.log(msgInfo);
-      addMessagesToDB(msgInfo, room);
+      // addMessagesToDB(msgInfo, room);
+      // I'LL JUST MAKE A REGULAR POST REQUEST TO UPDATE DB INSTEAD
+      // OF UPDATING DB THROUGH A SOCKETIO REQUEST.
       socket.to(room).broadcast.emit("receiveMessage", msgInfo);
       //^ sends data to every user except user who sent the data
     });

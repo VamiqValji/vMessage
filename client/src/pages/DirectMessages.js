@@ -58,7 +58,7 @@ export default function DirectMessages() {
                 </span>
               );
               // return <span key={n} onClick={e => console.log(e.currentTarget.innerHTML)}>User {n}</span>
-            }) : <div>No Friends Yet...</div> }
+            }) : <div className="c">No Friends Yet...</div> }
           </div>
           <div className="addFriend">
             <Link to="/friends">

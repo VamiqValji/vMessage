@@ -24,7 +24,7 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
     axios.defaults.headers.common["auth-token"] = TOKEN;
     axios
       .post("http://localhost:3001/friends/get/messages", {
-        roomName: roomName
+        roomName: roomName,
       })
       .then((res) => {
         try {
@@ -33,31 +33,34 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
             if (message !== undefined) {
               currentUserMessages.push(message);
             }
-          })
+          });
 
-          console.log("currentUserMessages", currentUserMessages);
           setMessages(currentUserMessages);
           setRenderMessages(
-            currentUserMessages.map(message => {
+            currentUserMessages.map((message) => {
               return (
-                <span key={message.message + (Math.random()).toString()} id={message.author === yourUsername ? "you" : "other"}>
+                <span
+                  key={message.message + Math.random().toString()}
+                  id={message.author === yourUsername ? "you" : "other"}
+                >
                   <div>
-                    <li>{message.author === yourUsername ? `${message.author} (You)` : message.author}</li>
-                    <li>{new Date().toLocaleTimeString()}</li>
+                    <li>
+                      {message.author === yourUsername
+                        ? `${message.author} (You)`
+                        : message.author}
+                    </li>
+                    <li>{message.timeSent}</li>
                   </div>
                   {message.message}
                 </span>
-                )
+              );
             })
-          )
-
-        } catch(err) {
+          );
+        } catch (err) {
           console.warn("ERROR", err);
         }
-      })
-  }, [data, currentUser])
-
-  //
+      });
+  }, [data, currentUser, yourUsername]);
 
   // const userEvent = (user=String, EVENT="joined") => {
   //   let currentTime = new Date().toLocaleTimeString();
@@ -66,45 +69,78 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
   //   document.getElementsByClassName("messageArea")[0].appendChild(span);
   // }
 
-  const addMsg = (msg, who="other", username="you") => {
+  const addMsgToDB = (author = String, message = String, timeSent = String) => {
+    // room name
+    let consistent = [yourUsername, currentUser].sort();
+    let roomName = `${consistent[0]},${consistent[1]}`;
+    // post
+    const TOKEN = localStorage.getItem("token");
+    if (!TOKEN) return;
+    axios.defaults.headers.common["auth-token"] = TOKEN;
+    axios
+      .post("http://localhost:3001/friends/add/messages", {
+        roomName: roomName,
+        author: author,
+        message: message,
+        timeSent: timeSent,
+      })
+      .then((res) => {
+        console.log("res data: ", res.data);
+      })
+      .catch((err) => {
+        console.warn(err);
+      });
+  };
+
+  const addMsg = (
+    msg = String,
+    who = "other",
+    username = "you",
+    saveToDB = false
+  ) => {
+    console.log("addmsg", msg, who, username);
     let currentTime = new Date().toLocaleTimeString();
     let span = document.createElement("div");
-    let key = `${msg}${(Math.random()).toString()}`;
+    let key = `${msg}${Math.random().toString()}`;
     if (who === "other") {
-      span.innerHTML = (`<span key={${key}} id=${who}><div><li>${username}</li><li>${currentTime}</li></div>${msg}</span>`);
-    } else { // you
-      span.innerHTML = (`<span key={${key}} id=${who}><div><li>${yourUsername} (You)</li><li>${currentTime}</li></div>${msg}</span>`);
+      span.innerHTML = `<span key={${key}} id=${who}><div><li>${username}</li><li>${currentTime}</li></div>${msg}</span>`;
+    } else {
+      // you
+      span.innerHTML = `<span key={${key}} id=${who}><div><li>${yourUsername} (You)</li><li>${currentTime}</li></div>${msg}</span>`;
     }
     document.getElementsByClassName("messageArea")[0].appendChild(span);
     // after changes made to container
     let container = document.getElementsByClassName("messageArea")[0];
-    container.scrollBy(0,container.scrollHeight);
-  }
-  
+    container.scrollBy(0, container.scrollHeight);
+    if (saveToDB) addMsgToDB(currentUser, msg, new Date().toLocaleTimeString());
+  };
+
   const sendMessage = (e) => {
     e.preventDefault();
     let msg = inputRef.current.value;
     if (msg < 1 || currentUser === "") return;
     console.log(msg);
-    socket.emit("sendMessage", {msg, username: yourUsername});
-    addMsg(msg, "you");
+    socket.emit("sendMessage", { msg, username: yourUsername });
+    addMsg(msg, "you", "you", true);
     inputRef.current.value = "";
-  }
-  //
+  };
 
   console.log("msgs", messages);
-  messages.map(message => console.log("adawdawd",message[0]));
+  messages.map((message) => console.log("adawdawd", message[0]));
 
   useEffect(() => {
     socket = io(ENDPOINT);
-    socket.emit("connected", {username: yourUsername, currentUser: currentUser/*, room: `${yourUsername}to${currentUser}`*/});
-    console.log(`currentUser(${currentUser})`)
-    if (currentUser !== "") { // have selected user
+    socket.emit("connected", {
+      username: yourUsername,
+      currentUser: currentUser /*, room: `${yourUsername}to${currentUser}`*/,
+    });
+    console.log(`currentUser(${currentUser})`);
+    if (currentUser !== "") {
+      // have selected user
       socket.on("receiveMessage", (msgInfo) => {
         console.log(msgInfo);
         addMsg(msgInfo.msg, "other", msgInfo.username);
       });
-
     }
     // userEvent("You", "joined");
 
@@ -134,8 +170,8 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
             {messages.length > 0 ? (
               renderMessages
             ) : (
-              "No messages here!"
-            ) }
+              <div className="c">No messages here!</div>
+            )}
           </div>
           <div className="messageBoxContainer">
             <form onSubmit={(e) => sendMessage(e)} className="messageBox">

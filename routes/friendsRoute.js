@@ -25,17 +25,21 @@ router.post("/get/messages", auth, async (req, res) => {
 });
 
 router.post("/add/messages", auth, async (req, res) => {
+  console.log("add msg post request", req.body);
   await messages.findOneAndUpdate(
     {
       groupName: req.body.roomName,
     },
     {
       $addToSet: {
-        messages: { author: req.body.author, message: req.body.message },
+        messages: {
+          author: req.body.author,
+          message: req.body.message,
+          timeSent: req.body.timeSent,
+        },
       },
     }
   );
-
   return res.status(200).json({ message: "Added message." });
   // return res.status(404).json({ message: "Chat not found." });
 });
