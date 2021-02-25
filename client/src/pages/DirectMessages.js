@@ -27,7 +27,7 @@ export default function DirectMessages() {
         console.log("get friends", res.data);
         res.data.friends.forEach((friend) => {
           // console.log("friend", friend);
-          tempFriendsList.push(friend.name);
+          tempFriendsList.push(friend);
         })
         setData(res.data);
         setFriends(tempFriendsList);
@@ -44,7 +44,7 @@ export default function DirectMessages() {
         <div className="chatContainer">
           <h2><div>Friends</div></h2>
           <div className="chatBoxList">
-            {friends.map((n) => {
+            {friends.length >= 1 ? friends.map((n) => {
               return (
                 <span
                   key={n}
@@ -58,7 +58,7 @@ export default function DirectMessages() {
                 </span>
               );
               // return <span key={n} onClick={e => console.log(e.currentTarget.innerHTML)}>User {n}</span>
-            })}
+            }) : <div>No Friends Yet...</div> }
           </div>
           <div className="addFriend">
             <Link to="/friends">

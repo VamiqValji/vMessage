@@ -12,6 +12,32 @@ router.get("/get", auth, (req, res) => {
   });
 });
 
+router.post("/get/messages", auth, async (req, res) => {
+  // returns GC / DM info
+  // console.log(result);
+  let roomName = req.body.roomName;
+  console.log("get/messages", `(${req.body.roomName})`);
+
+  let roomData = await messages.findOne({ groupName: roomName });
+  if (roomData) {
+    return res.status(404).json(roomData);
+  }
+  return res.status(404).json({ message: "Chat not found." });
+  // if (
+  //   roomName.split(",")[0].length >= 1 &&
+  //   roomName.split(",")[1].length >= 1
+  // ) {
+  //   messages.findOne({ groupName: roomName }).then((result) => {
+  //     return res.status(201).json({
+  //       message: "{ friends: result.friends, yourUsername: result.email }",
+  //     });
+  //   });
+
+  // } else {
+  //
+  // }
+});
+
 router.post("/requests", auth, (req, res) => {
   signUp.findById({ _id: res.locals.id.id }).then((result) => {
     console.log(result);

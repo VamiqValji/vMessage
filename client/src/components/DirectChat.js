@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import "../App.css";
+import axios from "axios";
 
 import io from "socket.io-client";
 let socket;
@@ -13,28 +14,45 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
 
   useEffect(() => {
     let currentUserMessages = [];
-    if (data.friends !== undefined) {
-      console.log("data", data.friends);
-      data.friends.map(info => {
-        console.log(info.name + currentUser)
-        if (info.name === currentUser) {
-          console.log("info.name === currentUser")
-          currentUserMessages.push(info.messages);
+
+    // room name
+    let consistent = [yourUsername, currentUser].sort();
+    let roomName = `${consistent[0]},${consistent[1]}`;
+    // request
+    const TOKEN = localStorage.getItem("token");
+    if (!TOKEN) return;
+    axios.defaults.headers.common["auth-token"] = TOKEN;
+    axios
+      .post("http://localhost:3001/friends/get/messages", {
+        roomName: roomName
+      }) // returns GC / DM info
+      .then((res) => {
+        try {
+          console.log("get friends", res.data);
+          res.data.friends.forEach((friend) => {
+            // tempFriendsList.push(friend);
+          })
+        } catch(err) {
+          console.warn("ERROR", err);
         }
-      });
-      setMessages(currentUserMessages);
-      setRenderMessages(
-        currentUserMessages.map(message => {
-          return (<span key={message[0][0] + (Math.random()).toString()} id={message[0][0] === yourUsername ? "you" : "other"}>
-          <div>
-            <li>{message[0][0] === yourUsername ? `${message[0][0]} (You)` : message[0][0]}</li>
-            <li>{new Date().toLocaleTimeString()}</li>
-          </div>
-          {message[0][1]}
-        </span>)
-        })
-      )
-    }
+      })
+    //   if (data.friends !== undefined) {
+    //     data.friends.map(info => {
+    //     currentUserMessages.push(info.messages);
+    //   });
+    //   setMessages(currentUserMessages);
+    //   setRenderMessages(
+    //     currentUserMessages.map(message => {
+    //       return (<span key={message[0][0] + (Math.random()).toString()} id={message[0][0] === yourUsername ? "you" : "other"}>
+    //       <div>
+    //         <li>{message[0][0] === yourUsername ? `${message[0][0]} (You)` : message[0][0]}</li>
+    //         <li>{new Date().toLocaleTimeString()}</li>
+    //       </div>
+    //       {message[0][1]}
+    //     </span>)
+    //     })
+    //   )
+    // }
   }, [data, currentUser])
 
   //
