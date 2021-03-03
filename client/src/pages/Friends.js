@@ -179,6 +179,22 @@ export default function Friends() {
               return (
                 <span key={n}>
                   <data>{n}</data>
+                  {classN !== "frTo" ? (
+                    <i
+                      onClick={(e) => {
+                        addOrDeleteUser(
+                          n,
+                          e.currentTarget.className.replace("fas fa-", ""),
+                          to,
+                          from,
+                          classN
+                        );
+                      }}
+                      className="fas fa-check"
+                    ></i>
+                  ) : (
+                    ""
+                  )}
                   <i
                     onClick={(e) => {
                       addOrDeleteUser(
@@ -189,19 +205,7 @@ export default function Friends() {
                         classN
                       );
                     }}
-                    class="fas fa-check"
-                  ></i>
-                  <i
-                    onClick={(e) => {
-                      addOrDeleteUser(
-                        n,
-                        e.currentTarget.className.replace("fas fa-", ""),
-                        to,
-                        from,
-                        classN
-                      );
-                    }}
-                    class="fas fa-times"
+                    className="fas fa-times"
                   ></i>
                 </span>
               );
@@ -214,6 +218,7 @@ export default function Friends() {
     if (to.length > 0) {
       renderTos = renderFrs(to, "frTo");
     }
+    console.log("to", to, "from", from, "frsTo", frsTo, "frsFrom", frsFrom);
     if (from.length > 0) {
       renderFroms = renderFrs(from, "frFrom");
     }
@@ -256,7 +261,7 @@ export default function Friends() {
                       // );
                       console.log("remove friend!");
                     }}
-                    class="fas fa-times"
+                    className="fas fa-times"
                   ></i>
                 </span>
               );
@@ -302,6 +307,8 @@ export default function Friends() {
   useEffect(() => {
     const TOKEN = localStorage.getItem("token");
     if (!TOKEN) return;
+    // let tempFrsTo = [];
+    // let tempFrsFrom = [];
     axios.defaults.headers.common["auth-token"] = TOKEN;
     axios
       .post("http://localhost:3001/friends/requests", {
@@ -310,13 +317,19 @@ export default function Friends() {
       .then((res) => {
         console.log(res.data);
         res.data.frs.forEach((fr) => {
-          console.log("pushing: ", fr);
-          try {
+          if (fr.to !== undefined) {
             setFrsTo((prev) => prev.push(fr.to));
-          } catch (err) {
+            console.log("pushing TO: ", fr.to);
+            // tempFrsTo.push(fr.to);
+          } else if (fr.from !== undefined) {
             setFrsFrom((prev) => prev.push(fr.from));
+            console.log("pushing FROM: ", fr.from);
+            // tempFrsFrom.push(fr.from);
           }
         });
+        // setFrsTo(tempFrsTo);
+        // setFrsFrom(tempFrsFrom);
+        console.log("AFTER PUSH, TO, FROM", frsTo, frsFrom);
         renderFriendsListFunc(frsTo, frsFrom);
         setFriendsLoaded(true);
         console.log("Data loaded. => ", frsTo, frsFrom, friendsLoaded);

@@ -56,6 +56,8 @@ export default function DirectChatMenu({ currentUser, data, yourUsername }) {
               );
             })
           );
+          let container = document.getElementsByClassName("messageArea")[0];
+          container.scrollBy(0, container.scrollHeight);
         } catch (err) {
           console.warn("ERROR", err);
         }
