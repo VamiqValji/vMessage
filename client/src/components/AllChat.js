@@ -46,10 +46,14 @@ export default function AllChat() {
     let currentTime = new Date().toLocaleTimeString();
     let span = document.createElement("div");
     if (who === "other") {
-      span.innerHTML = `<span key={${msg}} id=${who}><div><li>${username}</li><li>${currentTime}</li></div>${msg}</span>`;
+      span.innerHTML = `<span key={${
+        msg + Math.random().toString()
+      }} id=${who}><div><li>${username}</li><li>${currentTime}</li></div>${msg}</span>`;
     } else {
       // you
-      span.innerHTML = `<span key={${msg}} id=${who}><div><li>You</li><li>${currentTime}</li></div>${msg}</span>`;
+      span.innerHTML = `<span key={${
+        msg + Math.random().toString()
+      }} id=${who}><div><li>You</li><li>${currentTime}</li></div>${msg}</span>`;
     }
     document.getElementsByClassName("messageArea")[0].appendChild(span);
     // after changes made to container
@@ -133,7 +137,7 @@ export default function AllChat() {
             <div ref={messageArea} className="messageArea">
               {/* <span id="you"><br/>messagemessagemessagemessagemessagemessagemessage</span>
                     {messages.map((n) => {
-                        return <span key={n} id="other"><br/>{n}</span>
+                        return <span key={n + Math.random().toString()} id="other"><br/>{n}</span>
                     })} */}
             </div>
             <div className="messageBoxContainer">

@@ -47,7 +47,7 @@ export default function DirectMessages() {
             {friends.length >= 1 ? friends.map((n) => {
               return (
                 <span
-                  key={n}
+                  key={n + Math.random().toString()}
                   onClick={(e) => {
                     let clickedUser = e.currentTarget.innerHTML;
                     if (currentUser === clickedUser) return;
@@ -57,7 +57,7 @@ export default function DirectMessages() {
                   {/*Friend*/}{n}
                 </span>
               );
-              // return <span key={n} onClick={e => console.log(e.currentTarget.innerHTML)}>User {n}</span>
+              // return <span key={n + Math.random().toString()} onClick={e => console.log(e.currentTarget.innerHTML)}>User {n}</span>
             }) : <div className="center">No Friends Yet...</div> }
           </div>
           <div className="addFriend">

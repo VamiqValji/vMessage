@@ -5,7 +5,7 @@ const auth = require("../middleware/auth");
 
 router.get("/get", auth, (req, res) => {
   signUp.findById({ _id: res.locals.id.id }).then((result) => {
-    console.log(result);
+    // console.log(result);
     return res
       .status(201)
       .json({ friends: result.friends, yourUsername: result.email });
@@ -25,7 +25,7 @@ router.post("/get/messages", auth, async (req, res) => {
 });
 
 router.post("/add/messages", auth, async (req, res) => {
-  console.log("add msg post request", req.body);
+  // console.log("add msg post request", req.body);
   await messages.findOneAndUpdate(
     {
       groupName: req.body.roomName,
@@ -46,7 +46,7 @@ router.post("/add/messages", auth, async (req, res) => {
 
 router.post("/requests", auth, (req, res) => {
   signUp.findById({ _id: res.locals.id.id }).then((result) => {
-    console.log(result);
+    // console.log(result);
     return res.status(201).json({ frs: result.friendRequests });
   });
   // .then((res) => {
@@ -110,6 +110,47 @@ router.post("/requests/add", auth, async (req, res) => {
   return res.status(201).json({ message: "Added friend." });
 });
 
+router.put("/list/delete", auth, async (req, res) => {
+
+  const requestUser = await signUp.findOne({
+    _id: res.locals.id.id,
+  });  
+  const removedUser = await signUp.findOne({
+    email: req.body.username,
+  });
+  let newListOfFriends_REQUESTED_USER = removedUser.friends.filter(friend => friend !== requestUser.email);
+  let newListOfFriends_REMOVED_USER = requestUser.friends.filter(friend => friend !== removedUser.email);
+  
+  console.log(newListOfFriends_REMOVED_USER, newListOfFriends_REQUESTED_USER)
+
+  await signUp.findOneAndUpdate(
+    {
+      email: req.body.username,
+    },
+    {
+      $set: {
+        friends: newListOfFriends_REMOVED_USER,
+      },
+      // $pull: {
+      //   friends: removedUser.email,
+      // },
+    }
+  );
+  await signUp.findOneAndUpdate(
+    {
+      _id: res.locals.id.id,
+    },
+    {
+      $set: {
+        friends: newListOfFriends_REQUESTED_USER,
+      },
+      // $pull: {
+      //   friends: requestUser.email,
+      // },
+    }
+  );
+});
+
 router.post("/requests/delete", auth, async (req, res) => {
   let requestUser = await signUp.findOne({
     _id: res.locals.id.id,
@@ -134,7 +175,7 @@ router.post("/requests/delete", auth, async (req, res) => {
       },
     }
   );
-  console.log({ from: res.locals.id.id }, { to: req.body.username });
+  // console.log({ from: res.locals.id.id }, { to: req.body.username });
 });
 
 router.post("/search", auth, async (req, res) => {
@@ -154,8 +195,8 @@ router.post("/search", auth, async (req, res) => {
     // check if user is already friends
     // with who they are trying to add
     for (let i = 0; i < requestUser.friends.length; i++) {
-      console.log(requestUser.friends[i].name);
-      console.log(isDuplicate.email);
+      // console.log(requestUser.friends[i].name);
+      // console.log(isDuplicate.email);
       if (requestUser.friends[i].name === isDuplicate.email) {
         return res
           .status(401)

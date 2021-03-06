@@ -10,6 +10,7 @@ export default function Friends() {
 
   const inputRef = useRef("");
 
+  const [yourUsername, setYourUsername] = useState("");
   const [renderSearchMessage, setRenderSearchMessage] = useState("");
   const [frsTo, setFrsTo] = useState([]);
   const [frsFrom, setFrsFrom] = useState([]);
@@ -162,6 +163,28 @@ export default function Friends() {
     deleteUser(user, to, from, classN, removingUser);
   };
 
+  const deleteFriendFromFriendsList = (
+    removedFriend = String,
+    DOMSpanToRemove = HTMLSpanElement
+  ) => {
+    DOMSpanToRemove.remove();
+    const TOKEN = localStorage.getItem("token");
+    if (!TOKEN) return;
+    axios.defaults.headers.common["auth-token"] = TOKEN;
+    axios
+      .put("http://localhost:3001/friends/list/delete", {
+        username: removedFriend,
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.warn(err);
+      });
+    // console.log("POST");
+    // console.log(removedFriend, DOMSpanToRemove);
+  };
+
   const renderFriendsListFunc = (to = [], from = []) => {
     let renderTos;
     let renderFroms;
@@ -177,7 +200,7 @@ export default function Friends() {
             {list.map((n) => {
               // e.currentTarget.firstChild.innerHTML
               return (
-                <span key={n}>
+                <span key={n + Math.random().toString()}>
                   <data>{n}</data>
                   {classN !== "frTo" ? (
                     <i
@@ -238,27 +261,29 @@ export default function Friends() {
       .then((res) => {
         console.log("get friends", res.data);
         res.data.friends.forEach((friend) => {
-          friends.push(friend.name);
+          if (friend !== undefined) {
+            friends.push(friend);
+          }
         });
         setRenderFriendsList(
           <>
             {renderTos}
             {renderFroms}
             {friends.map((n) => {
+              // console.log("FRIEND: ", friends);
               return (
-                <span key={n}>
+                <span key={n + Math.random().toString()}>
                   {" "}
-                  Friend {n}
+                  {/* Friend */} {n}
                   <i
+                    style={{ marginLeft: 20, cursor: "pointer" }}
                     onClick={(e) => {
                       // REMOVE FRIEND!
-                      // addOrDeleteUser(
-                      //   n,
-                      //   e.currentTarget.className.replace("fas fa-", ""),
-                      //   to,
-                      //   from,
-                      //   classN
-                      // );
+                      setYourUsername(res.data.yourUsername);
+                      deleteFriendFromFriendsList(
+                        n,
+                        e.currentTarget.parentElement
+                      );
                       console.log("remove friend!");
                     }}
                     className="fas fa-times"
