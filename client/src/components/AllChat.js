@@ -42,19 +42,52 @@ export default function AllChat() {
     document.getElementsByClassName("messageArea")[0].appendChild(span);
   };
 
+  // const getRegexInnerHTML = (
+  //   img = String,
+  //   who = "other",
+  //   username = "you",
+  //   currentTime = String
+  // ) => {
+  //   const getImg = () => {
+  //     return `<a href=${img}"><img src="${img}" alt="User Image" style="width:42px;height:42px;"></a>`;
+  //   };
+  //   const innerHTML = `<span key={${
+  //     img + Math.random().toString()
+  //   }} id=${who}><div><li>${username}</li><li>${currentTime}</li></div>${getImg}</span>`;
+  //   console.log(innerHTML);
+  //   return innerHTML;
+  // };
+
   const addMsg = (msg, who = "other", username = "you") => {
     let currentTime = new Date().toLocaleTimeString();
     let span = document.createElement("div");
-    if (who === "other") {
-      span.innerHTML = `<span key={${
-        msg + Math.random().toString()
-      }} id=${who}><div><li>${username}</li><li>${currentTime}</li></div>${msg}</span>`;
+    console.log();
+    const regexRes = msg.match(/!\[(.*?)\]/);
+    if (regexRes === null) {
+      if (who === "other") {
+        span.innerHTML = `<span key={${
+          msg + Math.random().toString()
+        }} id=${who}><div><li>${username}</li><li>${currentTime}</li></div>${msg}</span>`;
+      } else {
+        // you
+        span.innerHTML = `<span key={${
+          msg + Math.random().toString()
+        }} id=${who}><div><li>You</li><li>${currentTime}</li></div>${msg}</span>`;
+      }
     } else {
-      // you
+      // span.innerHTML = getRegexInnerHTML(
+      //   regexRes[1],
+      //   who,
+      //   username,
+      //   currentTime
+      // );
       span.innerHTML = `<span key={${
         msg + Math.random().toString()
-      }} id=${who}><div><li>You</li><li>${currentTime}</li></div>${msg}</span>`;
+      }} id=${who}><div><li>You</li><li>${currentTime}</li></div><a href="${
+        regexRes[1]
+      }"><img src="${regexRes[1]}" alt="User Image"></a></span>`;
     }
+
     document.getElementsByClassName("messageArea")[0].appendChild(span);
     // after changes made to container
     let container = document.getElementsByClassName("messageArea")[0];
