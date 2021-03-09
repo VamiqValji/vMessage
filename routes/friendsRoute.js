@@ -83,6 +83,9 @@ router.post("/requests/add", auth, async (req, res) => {
         friends: req.body.username,
         chats: { name: groupName, isDM: true },
       },
+      $pullAll: {
+        friendRequests: [{to: req.body.username},{from: req.body.username}],
+      },
     }
   );
   await signUp.findOneAndUpdate(
@@ -94,18 +97,27 @@ router.post("/requests/add", auth, async (req, res) => {
         friends: requestUser.email,
         chats: { name: groupName, isDM: true },
       },
+      $pullAll: {
+        friendRequests: [{to: requestUser.email},{from: requestUser.email}],
+      },
     }
   );
 
-  groupChatOrDM = new messages({
-    groupNickname: groupName,
+  let isDuplicate = await messages.findOne({
     groupName: groupName,
-    isDM: true,
-    members: [requestUser.email, req.body.username],
-    messages: [],
-    owner: req.body.username,
   });
-  groupChatOrDM.save();
+
+  if (!isDuplicate) {
+    groupChatOrDM = new messages({
+      groupNickname: groupName,
+      groupName: groupName,
+      isDM: true,
+      members: [requestUser.email, req.body.username],
+      messages: [],
+      owner: req.body.username,
+    });
+    groupChatOrDM.save();
+  }
 
   return res.status(201).json({ message: "Added friend." });
 });
