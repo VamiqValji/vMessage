@@ -448,3 +448,14 @@ form.messageBox {
   font-size: 1.3em;
   text-align: center;
 }
+
+.chatImg {
+  width: 10rem;
+  height: 10rem;
+  object-fit: cover;
+  filter: drop-shadow(0rem 0rem 0.1rem black);
+  border: 0.1rem solid var(--whiteSmoke);
+  margin: 0.2rem;
+}
+
+/* ![https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png] */
