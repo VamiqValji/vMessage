@@ -172,8 +172,8 @@ router.post("/requests/delete", auth, async (req, res) => {
       email: req.body.username,
     },
     {
-      $pull: {
-        friendRequests: { from: requestUser.email },
+      $pullAll: {
+        friendRequests: [{ from: requestUser.email }, { to: requestUser.email }],
       },
     }
   );
@@ -182,8 +182,8 @@ router.post("/requests/delete", auth, async (req, res) => {
       _id: res.locals.id.id,
     },
     {
-      $pull: {
-        friendRequests: { to: req.body.username },
+      $pullAll: {
+        friendRequests: [{ to: req.body.username }, { from: req.body.username }],
       },
     }
   );

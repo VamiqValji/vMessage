@@ -37,7 +37,11 @@ export default function Friends() {
     remUser.remove();
 
     let frHeader = document.getElementsByClassName(classN);
-    if (frHeader.length <= 1) frHeader[0].remove();
+    try {
+      if (frHeader.length <= 1) frHeader[0].remove();
+    } catch {
+      console.log("Didn't remove header.");
+    }
   };
   const deleteUser = (
     user = "",
@@ -344,17 +348,24 @@ export default function Friends() {
         res.data.frs.forEach((fr) => {
           if (fr.to !== undefined) {
             setFrsTo((prev) => prev.push(fr.to));
+            // setFrsTo((prev) => [...prev, fr.to]);
             console.log("pushing TO: ", fr.to);
             // tempFrsTo.push(fr.to);
           } else if (fr.from !== undefined) {
             setFrsFrom((prev) => prev.push(fr.from));
+            // setFrsFrom((prev) => [...prev, fr.from]);
             console.log("pushing FROM: ", fr.from);
             // tempFrsFrom.push(fr.from);
           }
         });
         // setFrsTo(tempFrsTo);
         // setFrsFrom(tempFrsFrom);
-        console.log("AFTER PUSH, TO, FROM", frsTo, frsFrom);
+        console.log(
+          "%c AFTER PUSH, TO, FROM",
+          frsTo,
+          frsFrom,
+          "background: #222; color: #bada55"
+        );
         renderFriendsListFunc(frsTo, frsFrom);
         setFriendsLoaded(true);
         console.log("Data loaded. => ", frsTo, frsFrom, friendsLoaded);
