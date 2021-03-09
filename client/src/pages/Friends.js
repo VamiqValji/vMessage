@@ -9,6 +9,8 @@ export default function Friends() {
   const isLogged = useSelector((state) => state.isLogged);
 
   const inputRef = useRef("");
+  const outgoingHeaderRef = useRef("");
+  const incomingHeaderRef = useRef("");
 
   const [yourUsername, setYourUsername] = useState("");
   const [renderSearchMessage, setRenderSearchMessage] = useState("");
@@ -35,13 +37,27 @@ export default function Friends() {
     console.log("removing: ", remUser);
 
     remUser.remove();
+    console.log(`%c ${classN} `, "background: #222; color: #bada55");
 
     let frHeader = document.getElementsByClassName(classN);
-    try {
-      if (frHeader.length <= 1) frHeader[0].remove();
-    } catch {
-      console.log("Didn't remove header.");
+    if (frHeader.length <= 1) {
+      try {
+        if (classN === "frTo") {
+          console.log(`classN === frTo`);
+          outgoingHeaderRef.current.remove();
+        } else if (classN === "frFrom") {
+          incomingHeaderRef.current.remove();
+        }
+      } catch (err) {
+        console.log(
+          "Didn't remove header: ",
+          err,
+          outgoingHeaderRef,
+          incomingHeaderRef
+        );
+      }
     }
+    // frHeader[0].remove();
   };
   const deleteUser = (
     user = "",
@@ -73,7 +89,7 @@ export default function Friends() {
       console.log("removed", to, from);
     }
 
-    deleteUserFromUI(remUser);
+    deleteUserFromUI(remUser, classN);
   };
 
   const addUser = (
@@ -196,7 +212,10 @@ export default function Friends() {
     const renderFrs = (list = [], classN) => {
       return (
         <>
-          <div className={classN}>
+          <div
+            className={classN}
+            ref={classN === "frTo" ? outgoingHeaderRef : incomingHeaderRef}
+          >
             <h3>
               {classN === "frTo" ? "Outgoing" : "Incoming"} Friend Requests (
               {list.length})
