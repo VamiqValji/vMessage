@@ -70,19 +70,24 @@ export default function AllChat() {
         // return msg.replace(" ", "");
       };
 
+      /* 
+      <a href="${
+        regexRes[1]
+      }">
+      */
+
       span.innerHTML = `<span key={${
         msg + Math.random().toString()
-      }} id=${who}><div><li>You</li><li>${currentTime}</li></div>${returnMsg()}<a href="${
+      }} id=${who}><div><li>You</li><li>${currentTime}</li></div>${returnMsg()}<img src="${
         regexRes[1]
-      }"><img src="${
-        regexRes[1]
-      }" alt="User Image" class="chatImg"></a></span>`;
+      }" alt="User Image" class="chatImg"></span>`;/*</a>*/
       let imgOfSpan = span.getElementsByTagName("img")[0];
       imgOfSpan.addEventListener("click", () => {
         setModalData({
           active: true,
           url: regexRes[1]
         });
+        console.log("clicked img" + regexRes[1]);
       })
       // style="width:42px;height:42px;"
     }
@@ -158,9 +163,16 @@ export default function AllChat() {
   const Modal = () => {
     return (
       <>
-        <div>
-          <img src={modalData.active} alt="User Image"/>
-          <a href={modalData.url}><h6>Click here for the image address</h6></a>
+        <div className={`imgModalContainer ${modalData.active ? "popIn" : ""}`} onClick={() => {
+          setModalData({
+            active: false,
+            url: modalData.url
+          });
+        }}>
+          <div className="imgModal">
+            <img src={modalData.url} alt="User Image"/>
+            <a href={modalData.url}><h6>Click here for the image address</h6></a>
+          </div>
         </div>
       </>
     )

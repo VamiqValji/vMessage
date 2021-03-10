@@ -458,4 +458,49 @@ form.messageBox {
   margin: 0.2rem;
 }
 
+.imgModalContainer {
+  z-index: 1;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  width: 100vw;
+  height: 100%;
+}
+.imgModal {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  object-fit: contain;
+}
+.imgModal a {
+  color: white;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin-top: -3rem;
+  padding: 1rem;
+  /* background: black; */
+  border-radius: 1rem;
+  font-size: 2em;
+  text-decoration: none;
+}
+.imgModalContainer.popIn {
+  /* animation-name: popIn;
+  animation-duration: 0.2s; */
+  transition: 0.2s;
+}
+
+/* @keyframes popIn {
+  0% {
+    transform: scale(0%);
+  }
+  100% {
+    transform: scale(100%);
+  }
+} */
+
 /* ![https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png] */
