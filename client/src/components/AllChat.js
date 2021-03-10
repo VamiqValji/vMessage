@@ -23,6 +23,11 @@ export default function AllChat() {
   const inputRef = useRef("");
   const messageArea = useRef("");
 
+  const [modalData, setModalData] = useState({
+    active: false,
+    url: ""
+  });
+
   const userEvent = (user = String, EVENT = "joined") => {
     let currentTime = new Date().toLocaleTimeString();
     let span = document.createElement("div");
@@ -59,13 +64,26 @@ export default function AllChat() {
         }} id=${who}><div><li>You</li><li>${currentTime}</li></div>${msg}</span>`;
       }
     } else {
+      const returnMsg = () => {
+        if (msg.length > 0) return `${msg.replace(regexRes[0], "")}<br />`;
+        // return "";
+        // return msg.replace(" ", "");
+      };
+
       span.innerHTML = `<span key={${
         msg + Math.random().toString()
-      }} id=${who}><div><li>You</li><li>${currentTime}</li></div><a href="${
+      }} id=${who}><div><li>You</li><li>${currentTime}</li></div>${returnMsg()}<a href="${
         regexRes[1]
       }"><img src="${
         regexRes[1]
       }" alt="User Image" class="chatImg"></a></span>`;
+      let imgOfSpan = span.getElementsByTagName("img")[0];
+      imgOfSpan.addEventListener("click", () => {
+        setModalData({
+          active: true,
+          url: regexRes[1]
+        });
+      })
       // style="width:42px;height:42px;"
     }
 
@@ -137,10 +155,22 @@ export default function AllChat() {
     };
   }, [ENDPOINT]);
 
+  const Modal = () => {
+    return (
+      <>
+        <div>
+          <img src={modalData.active} alt="User Image"/>
+          <a href={modalData.url}><h6>Click here for the image address</h6></a>
+        </div>
+      </>
+    )
+  }
+
   return (
     <>
       <div className="flexCenter">
         <div className="loginContainer">
+          {modalData.active && <Modal />}
           <div className="messagingContainer">
             <h2>
               Public Room
