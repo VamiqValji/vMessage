@@ -49,7 +49,13 @@ export default function Games() {
   const GamesDashboard = () => {
       return (
         <div className="gamesContainer">
-            <h1 style={{ display: "flex", justifyContent: "center" }} >Games</h1>
+            <div className="gamesHeader">
+                <h1>Games</h1>
+                <span className="seperator"></span>
+                <span>game 1 <i class="fas fa-square"></i></span>
+                <span>game 2 <i class="fas fa-futbol"></i></span>
+                <span>game 3 <i class="fas fa-basketball-ball"></i></span>
+            </div>
             <div className="gamesAndFriendsListContainer">
                 <div className="game">
                     {/* game in here */}
