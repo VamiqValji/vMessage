@@ -516,3 +516,23 @@ form.messageBox {
 } */
 
 /* ![https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png] */
+
+.gamesContainer h1 {
+  margin-top: -1rem;
+}
+.gamesAndFriendsListContainer {
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
+}
+.gamesAndFriendsListContainer .chatBoxList {
+  margin-top: 0rem;
+  margin-left: 1rem;
+  height: 33.75rem;
+}
+.game {
+  border-radius: 1rem;
+  background: black;
+  height: 33.75rem;
+  width: 60rem;
+}
