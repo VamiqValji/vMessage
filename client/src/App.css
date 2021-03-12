@@ -530,6 +530,14 @@ form.messageBox {
 .gamesAndFriendsListContainer .chatBoxList span {
   cursor: pointer;
 }
+.gamesAndFriendsListContainer .chatBoxList span div {
+  display: inline-flex;
+  align-items: center;
+  float: right;
+}
+.gamesAndFriendsListContainer .chatBoxList span div i {
+  margin-left: 0.3rem;
+}
 .game {
   border-radius: 1rem;
   background: black;

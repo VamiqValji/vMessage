@@ -8,6 +8,7 @@ export default function Games() {
   const isLogged = useSelector((state) => state.isLogged);
   const [friends, setFriends] = useState([]);
   const [data, setData] = useState([]);
+  const [currentGame, setCurrentGame] = useState("");
 
   useEffect(() => {
     const TOKEN = localStorage.getItem("token");
@@ -33,11 +34,13 @@ export default function Games() {
         return (
             <span
             key={n + Math.random().toString()}
-            onClick={(e) => {
-                console.log(e.currentTarget.innerHTML);
-            }}
+            // onClick={(e) => {
+            //     console.log(e.currentTarget.innerHTML);
+            // }}
             >
-            {/*Friend*/}{n}
+            {/*Friend*/}{n} <div onClick={() => {
+                console.log(`Invite ${n}.`);
+            }}>Invite <i class="fas fa-plus-circle"></i></div>
             </span>
         );
         // return <span key={n + Math.random().toString()} onClick={e => console.log(e.currentTarget.innerHTML)}>User {n}</span>
@@ -47,14 +50,33 @@ export default function Games() {
   }
 
   const GamesDashboard = () => {
+    
+    const gamesList = [
+        {
+            name: "Game 1",
+            icon: "fas fa-square"
+        },
+        {
+            name: "Game 2",
+            icon: "fas fa-futbol"
+        },
+        {
+            name: "Game 3",
+            icon: "fas fa-basketball-ball"
+        }
+    ]
+
       return (
         <div className="gamesContainer">
             <div className="gamesHeader">
                 <h1>Games</h1>
                 <span className="seperator"></span>
-                <span>game 1 <i class="fas fa-square"></i></span>
-                <span>game 2 <i class="fas fa-futbol"></i></span>
-                <span>game 3 <i class="fas fa-basketball-ball"></i></span>
+                {gamesList.map((game) => {
+                    return <span key={game.name} onClick={() => {
+                        console.log(`${game.name} clicked.`);
+                        setCurrentGame(game.name);
+                    }}>{game.name}<i class={game.icon}></i></span>
+                })}
             </div>
             <div className="gamesAndFriendsListContainer">
                 <div className="game">
