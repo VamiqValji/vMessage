@@ -11,6 +11,8 @@
   --lightSuccess: rgba(46, 204, 113, 0.85);
   --fail: rgba(231, 76, 60, 0.1);
   --whiteSmoke: rgba(245, 245, 245, 0.9);
+  --themeColorPrimary: #3498db;
+  --themeColorSecondary: #2980b9;
 }
 
 body {
@@ -57,6 +59,16 @@ body * {
   text-align: center;
   padding: 1rem;
   font-size: 1.5em;
+}
+
+.nav a {
+  color: whitesmoke;
+  text-decoration: none;
+  transition: 0.2s;
+}
+.nav a:hover {
+  color: var(--themeColorPrimary);
+  text-decoration: underline;
 }
 
 .rightNav {

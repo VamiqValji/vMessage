@@ -12,6 +12,7 @@ import SignUp from "./pages/SignUp";
 import PublicChat from "./pages/PublicChat";
 import DirectMessages from "./pages/DirectMessages";
 import Friends from "./pages/Friends";
+import Games from "./pages/Games";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -53,7 +54,9 @@ export default function App() {
     } /*[]*/
   );
 
-  const linkStyle = { textDecoration: "none", color: "white" };
+  const linkStyle = {
+    /*textDecoration: "none", color: "white"*/
+  };
 
   if (isLogged) {
     renderLogOut = (
@@ -94,6 +97,11 @@ export default function App() {
                       Direct Messages
                     </Link>
                   </li>
+                  <li>
+                    <Link to="/games" style={linkStyle}>
+                      Games
+                    </Link>
+                  </li>
                 </span>
                 <span className="rightNav">{renderLogOut}</span>
               </ul>
@@ -114,6 +122,9 @@ export default function App() {
             </Route>
             <Route path="/friends">
               <Friends />
+            </Route>
+            <Route path="/games">
+              <Games />
             </Route>
             <Route path="/">
               <Home />
