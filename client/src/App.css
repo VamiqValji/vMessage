@@ -542,13 +542,17 @@ form.messageBox {
   /* cursor: pointer; */
 }
 .gamesAndFriendsListContainer .chatBoxList .invite,
-.gamesAndFriendsListContainer .chatBoxList .invite:active {
+.gamesAndFriendsListContainer .chatBoxList .invite:active,
+.gamesAndFriendsListContainer .chatBoxList button,
+.gamesAndFriendsListContainer .chatBoxList button:active {
+  color: whitesmoke;
   padding: 0.1rem;
   border-radius: 0.2rem;
   border: solid 0.1rem var(--themeColorPrimary);
   background: var(--themeColorSecondary);
 }
-.gamesAndFriendsListContainer .chatBoxList .invite:hover {
+.gamesAndFriendsListContainer .chatBoxList .invite:hover,
+.gamesAndFriendsListContainer .chatBoxList button:hover {
   border: solid 0.1rem var(--themeColorSecondary);
   background: var(--themeColorPrimary);
 }

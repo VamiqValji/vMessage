@@ -15,6 +15,7 @@ export default function Games() {
   const [yourUsername, setYourUsername] = useState("");
   const [alreadyInvited, setAlreadyInvited] = useState([]);
   const [gameUserList, setGameUserList] = useState([]);
+  const [opponent, setOpponent] = useState("");
 
   const ENDPOINT = "http://localhost:3001";
 
@@ -53,6 +54,7 @@ export default function Games() {
             success: true,
             message: "Joined."
           });
+          setOpponent(data.to);
         } else {
           console.log(gameUserList)
           socket.emit("joinGameUserClientInfo", {
@@ -95,6 +97,18 @@ export default function Games() {
   }
 
   const FriendsList = () => {
+    if (gameUserList.length > 1) {
+      return (
+        <div className="chatBoxList">
+          <h2 className="center">You are in a room with {gameUserList.filter(user => user !== yourUsername)[0]}.</h2>
+            <button
+              onClick={() => {
+                console.log(`leaving room`);
+              }}
+            >Leave</button>
+        </div>
+      );
+    }
     if (currentGame !== "") {
       return (
         <div className="chatBoxList">

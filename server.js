@@ -182,7 +182,9 @@ io.on("connection", (socket) => {
       for (let i = 0; i < gamesUsersList.length; i++) {
         if (gamesUsersList[i].id === socket.id) {
           // socket.to(gamesRoom).broadcast.emit("userLeft", gamesUsersList[i].username);
-          // gamesUsersList.filter(gamesUsersList[i].id === socket.id);
+          gamesUsersList.filter(
+            (user) => user.username !== gamesUsersList[i].username
+          );
           gamesUsersList[i].inRoom = true;
           console.log(`${gamesUsersList[i].username} left the Games room.`);
         }
