@@ -29,6 +29,9 @@ body * {
   display: flex;
   justify-content: center;
 }
+.c {
+  margin: 0 auto;
+}
 
 /* SHORTCUTS */
 
@@ -527,13 +530,14 @@ form.messageBox {
   margin-left: 1rem;
   height: 33.75rem;
 }
-.gamesAndFriendsListContainer .chatBoxList span {
+/* .gamesAndFriendsListContainer .chatBoxList span {
   cursor: pointer;
-}
+} */
 .gamesAndFriendsListContainer .chatBoxList span div {
   display: inline-flex;
   align-items: center;
   float: right;
+  cursor: pointer;
 }
 .gamesAndFriendsListContainer .chatBoxList span div i {
   margin-left: 0.3rem;
@@ -587,3 +591,68 @@ form.messageBox {
   border-radius: 0.3rem;
   background: rgba(0, 0, 0, 0.6);
 }
+
+/* Click Speed Game Start */
+.click-speed {
+  background: rgba(0, 0, 0, 0.2);
+}
+.click-speed h1 {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.click-speed h2 {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.3rem;
+}
+.click-speed .gameItems {
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
+}
+.click-speed button {
+  margin: 1rem;
+  padding: 4rem;
+  font-size: 2em;
+  border-radius: 1rem;
+  color: whitesmoke;
+  border: solid 0.2rem var(--themeColorPrimary);
+  background: var(--themeColorSecondary);
+  transition: 0.1s;
+}
+.click-speed button:hover {
+  border: solid 0.2rem var(--themeColorSecondary);
+  background: var(--themeColorPrimary);
+}
+.click-speed button:active {
+  transition: 0s;
+  border: solid 0.2rem var(--themeColorPrimary);
+  background: var(--themeColorSecondary);
+}
+.click-speed span {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 1rem;
+  /* padding: 4rem 0rem 0rem 4rem; */
+  width: 1rem;
+  height: 15rem;
+  margin: 1rem;
+}
+.click-speed .score {
+  background: none;
+  display: flex;
+  justify-content: center;
+}
+.click-speed .score span {
+  background: none;
+  font-size: 1em;
+  height: 2rem;
+  text-align: center;
+  align-items: center;
+  margin-right: 3rem;
+  margin-left: 3rem;
+}
+.click-speed {
+}
+
+/* Click Speed Game End */
