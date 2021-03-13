@@ -32,6 +32,7 @@ const io = require("socket.io")(server, {
 
 let users = [];
 let dmUsers = [];
+let gamesUsersList = [];
 
 io.on("connection", (socket) => {
   // console.log("User joined.");
@@ -133,6 +134,23 @@ io.on("connection", (socket) => {
     });
 
     // io.emit("test", "welcome");
+  } else if (socket.handshake.headers.referer.includes("/games")) {
+    socket.on("connected", (data) => {
+      console.log(`${data.username} joined the Games room.`);
+      gamesUsersList.push({
+        username: data.username,
+        id: socket.id,
+      });
+    });
+    socket.on("disconnect", () => {
+      for (let i = 0; i < gamesUsersList.length; i++) {
+        if (gamesUsersList[i].id === socket.id) {
+          // socket.to(gamesRoom).broadcast.emit("userLeft", gamesUsersList[i].username);
+          // gamesUsersList.filter(gamesUsersList[i].id === socket.id);
+          console.log(`${gamesUsersList[i].username} left the Games room.`);
+        }
+      }
+    });
   }
 });
 

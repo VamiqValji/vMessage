@@ -4,11 +4,17 @@ import { useSelector } from "react-redux";
 import SuccessPopUp from "../components/SuccessPopUp";
 import axios from "axios";
 
+import io from "socket.io-client";
+let socket;
+
 export default function Games() {
   const isLogged = useSelector((state) => state.isLogged);
   const [friends, setFriends] = useState([]);
   const [data, setData] = useState([]);
   const [currentGame, setCurrentGame] = useState("");
+  const [yourUsername, setYourUsername] = useState("");
+
+  const ENDPOINT = "http://localhost:3001";
 
   useEffect(() => {
     const TOKEN = localStorage.getItem("token");
@@ -18,8 +24,20 @@ export default function Games() {
       console.log(res.data);
       setData(res.data);
       setFriends(res.data.friends);
+      setYourUsername(res.data.yourUsername);
     });
   }, []);
+
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("connected", {
+      username: yourUsername
+    });
+    return () => {
+      socket.disconnect();
+      socket.off();
+    }
+  }, [setYourUsername, yourUsername])
 
   const FriendsList = () => {
     if (currentGame !== "") {
