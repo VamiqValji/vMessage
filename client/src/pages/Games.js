@@ -33,11 +33,23 @@ export default function Games() {
     socket.emit("connected", {
       username: yourUsername
     });
+
+    socket.on("inviteClient", (data) => {
+      console.log(data);
+    })
+
     return () => {
       socket.disconnect();
       socket.off();
     }
   }, [setYourUsername, yourUsername])
+
+  const inviteFriend = (name=String) => {
+    socket.emit("invite", {
+      from: yourUsername,
+      to: name
+    });
+  }
 
   const FriendsList = () => {
     if (currentGame !== "") {
@@ -65,6 +77,7 @@ export default function Games() {
                   <div
                     onClick={() => {
                       console.log(`Invite ${n}.`);
+                      inviteFriend(n);
                     }}
                   >
                     Invite <i class="fas fa-plus-circle"></i>

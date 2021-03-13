@@ -135,12 +135,25 @@ io.on("connection", (socket) => {
 
     // io.emit("test", "welcome");
   } else if (socket.handshake.headers.referer.includes("/games")) {
+    const gamesRoom = "gamesRoom";
     socket.on("connected", (data) => {
       console.log(`${data.username} joined the Games room.`);
       gamesUsersList.push({
         username: data.username,
         id: socket.id,
       });
+      socket.join(gamesRoom);
+    });
+    socket.on("invite", (data) => {
+      for (let i = 0; i < gamesUsersList.length; i++) {
+        if (gamesUsersList[i].username === data.to) {
+          console.log(`found ${data.to}`);
+          io.to(gamesUsersList[i].id).emit("inviteClient", data);
+        } else {
+          // console.log(`didn't find ${data.to}`);
+        }
+      }
+      console.log(data);
     });
     socket.on("disconnect", () => {
       for (let i = 0; i < gamesUsersList.length; i++) {
