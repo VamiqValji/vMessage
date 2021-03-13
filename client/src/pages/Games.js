@@ -22,43 +22,58 @@ export default function Games() {
   }, []);
 
   const FriendsList = () => {
-    return (
-      <div className="chatBoxList">
-        <h2
-          style={{
-            margin: "0 auto",
-            marginBottom: 4,
-          }}
-        >
-          Invite Friends
-        </h2>
-        {friends.length >= 1 ? (
-          friends.map((n) => {
-            return (
-              <span
-                key={n + Math.random().toString()}
-                // onClick={(e) => {
-                //     console.log(e.currentTarget.innerHTML);
-                // }}
-              >
-                {/*Friend*/}
-                {n}{" "}
-                <div
-                  onClick={() => {
-                    console.log(`Invite ${n}.`);
-                  }}
+    if (currentGame !== "") {
+      return (
+        <div className="chatBoxList">
+          <h2
+            style={{
+              margin: "0 auto",
+              marginBottom: 4,
+            }}
+          >
+            Invite Friends
+          </h2>
+          {friends.length >= 1 ? (
+            friends.map((n) => {
+              return (
+                <span
+                  key={n + Math.random().toString()}
+                  // onClick={(e) => {
+                  //     console.log(e.currentTarget.innerHTML);
+                  // }}
                 >
-                  Invite <i class="fas fa-plus-circle"></i>
-                </div>
-              </span>
-            );
-            // return <span key={n + Math.random().toString()} onClick={e => console.log(e.currentTarget.innerHTML)}>User {n}</span>
-          })
-        ) : (
-          <div className="center">No Friends Yet...</div>
-        )}
-      </div>
-    );
+                  {/*Friend*/}
+                  {n}{" "}
+                  <div
+                    onClick={() => {
+                      console.log(`Invite ${n}.`);
+                    }}
+                  >
+                    Invite <i class="fas fa-plus-circle"></i>
+                  </div>
+                </span>
+              );
+              // return <span key={n + Math.random().toString()} onClick={e => console.log(e.currentTarget.innerHTML)}>User {n}</span>
+            })
+          ) : (
+            <div className="center">No Friends Yet...</div>
+          )}
+        </div>
+      );
+    } else {
+      return (
+        <div className="chatBoxList">
+          <h3
+            style={{
+              margin: "0 auto",
+              marginBottom: 4,
+            }}
+          >
+            Pick A Game First!
+          </h3>
+          </div>
+      );
+    }
   };
 
   const GamesDashboard = () => {
@@ -81,17 +96,23 @@ export default function Games() {
       if (currentGame === gamesList[0].name) {
         return (
           <>
-            <h1>{gamesList[0].name}</h1>
+            <h1 className="header">
+              <div className="timer">Timer: 10s</div>
+              <div className="title">{gamesList[0].name}</div>
+              <div className="userList">Users (1/2): []</div>
+            </h1>
             <h2>Score</h2>
             <div className="score">
-                <span className="P1">1</span>
-                <span className="P2">5</span>
+                <span className="P1">P1 Score: 1</span>
+                <span className="P2">P2 Score: 5</span>
             </div>
             <div className="gameItems">
-
               <button className="p1Btn">P1's Button</button>
               <span className="seperator"></span>
               <button className="p2Btn">P2's Button</button>
+            </div>
+            <div className="container">
+              <button className="startButton">Start Game</button>
             </div>
           </>
         );

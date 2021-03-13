@@ -601,10 +601,23 @@ form.messageBox {
   justify-content: center;
   margin-top: 1rem;
 }
+.click-speed .timer,
+.click-speed .userList {
+  font-size: 0.6em;
+  align-self: center;
+  color: whitesmoke;
+}
+.click-speed .timer {
+  margin-right: 5.5rem;
+}
+.click-speed .userList {
+  margin-left: 5.5rem;
+}
 .click-speed h2 {
   display: flex;
   justify-content: center;
   margin-top: 0.3rem;
+  margin-bottom: -0.5rem;
 }
 .click-speed .gameItems {
   display: flex;
@@ -645,14 +658,23 @@ form.messageBox {
 }
 .click-speed .score span {
   background: none;
-  font-size: 1em;
-  height: 2rem;
   text-align: center;
   align-items: center;
-  margin-right: 3rem;
-  margin-left: 3rem;
+  font-size: 1.2em;
+  height: 2rem;
+  width: 10rem;
+  margin-right: 7.1rem;
+  margin-left: 7.1rem;
+  margin-bottom: -1.5rem;
 }
-.click-speed {
+.click-speed .container {
+  display: flex;
+  justify-content: center;
+}
+.click-speed .startButton {
+  margin-top: 0rem;
+  padding: 1rem;
+  font-size: 1.5em;
 }
 
 /* Click Speed Game End */
