@@ -14,6 +14,7 @@ export default function Games() {
   const [currentGame, setCurrentGame] = useState("");
   const [yourUsername, setYourUsername] = useState("");
   const [alreadyInvited, setAlreadyInvited] = useState([]);
+  const [gameUserList, setGameUserList] = useState([]);
 
   const ENDPOINT = "http://localhost:3001";
 
@@ -26,25 +27,53 @@ export default function Games() {
       setData(res.data);
       setFriends(res.data.friends);
       setYourUsername(res.data.yourUsername);
+      // setGameUserList(prev => [...prev, res.data.yourUsername]);
+      setGameUserList([res.data.yourUsername]);
     });
   }, []);
 
   useEffect(() => {
-    socket = io(ENDPOINT);
-    socket.emit("connected", {
-      username: yourUsername
-    });
-
-    socket.on("inviteClient", (data) => {
-      console.log(data);
-      setFriends(prev => [...prev, `${data.from}_THIS_IS_AN_INCOMING_INVITE`]);
-    })
-
-    return () => {
-      socket.disconnect();
-      socket.off();
+    if (yourUsername.length > 0) {
+      socket = io(ENDPOINT);
+      socket.emit("connected", {
+        username: yourUsername
+      });
+  
+      socket.on("inviteClient", (data) => {
+        console.log(data);
+        setFriends(prev => [...prev, `${data.from}_THIS_IS_AN_INCOMING_INVITE`]);
+      });
+  
+      socket.on("joinGameUserClient", (data) => {
+        if (gameUserList.length >= 0 && gameUserList.length < 2) {
+          setGameUserList(prev => [...prev, data.from]);
+          socket.emit("joinGameUserClientInfo", {
+            from: data.to,
+            to: data.from,
+            success: true,
+            message: "Joined."
+          });
+        } else {
+          console.log(gameUserList)
+          socket.emit("joinGameUserClientInfo", {
+            to: data.from,
+            success: false,
+            message: "Room full."
+          });
+        }
+      });
+  
+      socket.on("joinGameUserClientFinal", (data) => {
+        if (data.success && gameUserList.length < 2) setGameUserList(prev => [...prev, data.from]);
+        console.log(data);
+      });
+      
+      return () => {
+        socket.disconnect();
+        socket.off();
+      }
     }
-  }, [setYourUsername, yourUsername])
+  }, [setYourUsername, yourUsername, setGameUserList, gameUserList])
 
   const inviteFriend = (name=String) => {
     if (alreadyInvited.includes(name)) return;
@@ -55,6 +84,14 @@ export default function Games() {
       from: yourUsername,
       to: name
     });
+  }
+
+  const joinUser = (name=String) => {
+    socket.emit("joinGameUser", {
+      from: yourUsername,
+      to: name // joining: name
+    });
+    // setGameUserList(prev => [...prev, name]);
   }
 
   const FriendsList = () => {
@@ -76,7 +113,11 @@ export default function Games() {
                 return (
                   <span key={n + Math.random().toString()}>
                     Incoming: {n}{" "}
-                    <div className="inviteInfo cursorPointer incoming">
+                    <div className="inviteInfo cursorPointer incoming"
+                    onClick={() => {
+                      joinUser(n);
+                    }}
+                    >
                       Join <i class="fas fa-door-open"></i>
                     </div>
                   </span>
@@ -153,7 +194,7 @@ export default function Games() {
             <h1 className="header">
               <div className="timer">Timer: 10s</div>
               <div className="title">{gamesList[0].name}</div>
-              <div className="userList">Users (1/2): []</div>
+              <div className="userList">Users ({gameUserList.length}/2): {gameUserList[0]}{gameUserList[1] && `,${gameUserList[1]}`}</div>
             </h1>
             <h2>Score</h2>
             <div className="score">

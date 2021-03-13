@@ -136,30 +136,54 @@ io.on("connection", (socket) => {
     // io.emit("test", "welcome");
   } else if (socket.handshake.headers.referer.includes("/games")) {
     const gamesRoom = "gamesRoom";
+
+    const getUserID = (username = String) => {
+      for (let i = 0; i < gamesUsersList.length; i++) {
+        if (gamesUsersList[i].username === username) {
+          return gamesUsersList[i].id;
+        }
+      }
+    };
+
     socket.on("connected", (data) => {
       console.log(`${data.username} joined the Games room.`);
       gamesUsersList.push({
         username: data.username,
         id: socket.id,
+        inRoom: false,
       });
       socket.join(gamesRoom);
     });
+
     socket.on("invite", (data) => {
       for (let i = 0; i < gamesUsersList.length; i++) {
         if (gamesUsersList[i].username === data.to) {
           console.log(`found ${data.to}`);
           io.to(gamesUsersList[i].id).emit("inviteClient", data);
+          // break;
         } else {
           // console.log(`didn't find ${data.to}`);
         }
       }
       console.log(data);
     });
+
+    socket.on("joinGameUser", (data) => {
+      console.log(data);
+      io.to(getUserID(data.to)).emit("joinGameUserClient", data);
+    });
+
+    socket.on("joinGameUserClientInfo", (data) => {
+      io.to(getUserID(data.to)).emit("joinGameUserClientFinal", data);
+      console.log(data);
+    });
+
     socket.on("disconnect", () => {
       for (let i = 0; i < gamesUsersList.length; i++) {
         if (gamesUsersList[i].id === socket.id) {
           // socket.to(gamesRoom).broadcast.emit("userLeft", gamesUsersList[i].username);
           // gamesUsersList.filter(gamesUsersList[i].id === socket.id);
+          gamesUsersList[i].inRoom = true;
           console.log(`${gamesUsersList[i].username} left the Games room.`);
         }
       }
