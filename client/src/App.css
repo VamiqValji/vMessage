@@ -24,13 +24,15 @@ body * {
 
 /* SHORTCUTS */
 
-/* center */
 .center {
   display: flex;
   justify-content: center;
 }
 .c {
   margin: 0 auto;
+}
+.cursorPointer {
+  cursor: pointer;
 }
 
 /* SHORTCUTS */
@@ -537,10 +539,41 @@ form.messageBox {
   display: inline-flex;
   align-items: center;
   float: right;
-  cursor: pointer;
+  /* cursor: pointer; */
+}
+.gamesAndFriendsListContainer .chatBoxList .invite,
+.gamesAndFriendsListContainer .chatBoxList .invite:active {
+  padding: 0.1rem;
+  border-radius: 0.2rem;
+  border: solid 0.1rem var(--themeColorPrimary);
+  background: var(--themeColorSecondary);
+}
+.gamesAndFriendsListContainer .chatBoxList .invite:hover {
+  border: solid 0.1rem var(--themeColorSecondary);
+  background: var(--themeColorPrimary);
 }
 .gamesAndFriendsListContainer .chatBoxList span div i {
   margin-left: 0.3rem;
+}
+.gamesAndFriendsListContainer .chatBoxList .incoming {
+  color: whitesmoke;
+  padding: 0.1rem;
+  border-radius: 0.2rem;
+  border: solid 0.1rem var(--themeColorPrimary);
+  background: var(--themeColorSecondary);
+}
+.gamesAndFriendsListContainer .chatBoxList .incoming:hover {
+  border: solid 0.1rem var(--themeColorSecondary);
+  background: var(--themeColorPrimary);
+}
+.gamesAndFriendsListContainer .chatBoxList .incoming:active {
+  border: solid 0.1rem var(--themeColorPrimary);
+  background: var(--themeColorSecondary);
+}
+.gamesAndFriendsListContainer .inviteInfo,
+.gamesAndFriendsListContainer .chatBoxList .invite {
+  font-size: 0.9em;
+  font-weight: 300;
 }
 .game {
   border-radius: 1rem;

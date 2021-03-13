@@ -13,6 +13,7 @@ export default function Games() {
   const [data, setData] = useState([]);
   const [currentGame, setCurrentGame] = useState("");
   const [yourUsername, setYourUsername] = useState("");
+  const [alreadyInvited, setAlreadyInvited] = useState([]);
 
   const ENDPOINT = "http://localhost:3001";
 
@@ -36,6 +37,7 @@ export default function Games() {
 
     socket.on("inviteClient", (data) => {
       console.log(data);
+      setFriends(prev => [...prev, `${data.from}_THIS_IS_AN_INCOMING_INVITE`]);
     })
 
     return () => {
@@ -45,6 +47,10 @@ export default function Games() {
   }, [setYourUsername, yourUsername])
 
   const inviteFriend = (name=String) => {
+    if (alreadyInvited.includes(name)) return;
+    setAlreadyInvited(prev => [...prev, name]);
+    console.log(alreadyInvited);
+    setFriends(prev => [...prev, `${yourUsername}_THIS_IS_AN_OUTGOING_INVITE`]);
     socket.emit("invite", {
       from: yourUsername,
       to: name
@@ -61,30 +67,45 @@ export default function Games() {
               marginBottom: 4,
             }}
           >
-            Invite Friends
+            Invites
           </h2>
           {friends.length >= 1 ? (
             friends.map((n) => {
-              return (
-                <span
-                  key={n + Math.random().toString()}
-                  // onClick={(e) => {
-                  //     console.log(e.currentTarget.innerHTML);
-                  // }}
-                >
-                  {/*Friend*/}
-                  {n}{" "}
-                  <div
-                    onClick={() => {
-                      console.log(`Invite ${n}.`);
-                      inviteFriend(n);
-                    }}
-                  >
-                    Invite <i class="fas fa-plus-circle"></i>
-                  </div>
-                </span>
-              );
-              // return <span key={n + Math.random().toString()} onClick={e => console.log(e.currentTarget.innerHTML)}>User {n}</span>
+              if (n.includes("_THIS_IS_AN_INCOMING_INVITE")) {
+                n = n.replace("_THIS_IS_AN_INCOMING_INVITE", "");
+                return (
+                  <span key={n + Math.random().toString()}>
+                    Incoming: {n}{" "}
+                    <div className="inviteInfo cursorPointer incoming">
+                      Join <i class="fas fa-door-open"></i>
+                    </div>
+                  </span>
+                );
+              } else if (n.includes("_THIS_IS_AN_OUTGOING_INVITE")) {
+                n = n.replace("_THIS_IS_AN_OUTGOING_INVITE", "");
+                return (
+                  <span key={n + Math.random().toString()}>
+                    Outgoing: {n}{" "}
+                    <div className="inviteInfo outgoing">
+                      Waiting... <i class="fas fa-hourglass-half"></i>
+                    </div>
+                  </span>
+                );
+              } else {
+                return (
+                  <span key={n + Math.random().toString()}>
+                    {n}{" "}
+                    <div className="invite cursorPointer"
+                      onClick={() => {
+                        console.log(`Invite ${n}.`);
+                        inviteFriend(n);
+                      }}
+                    >
+                      Invite <i class="fas fa-plus-circle"></i>
+                    </div>
+                  </span>
+                );
+              }
             })
           ) : (
             <div className="center">No Friends Yet...</div>
@@ -106,6 +127,8 @@ export default function Games() {
       );
     }
   };
+
+
 
   const GamesDashboard = () => {
     const gamesList = [
