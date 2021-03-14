@@ -14,7 +14,7 @@ This project was created using the MERN stack.
 > ![](readme_images/manage_friends_page.PNG)
 > Direct Messages Page
 > ![](readme_images/direct_messages_page.PNG)
-> > Games Page
+> Games Page
 > ![](readme_images/games_page.PNG)
 
 This project may be further updated.
